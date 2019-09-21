@@ -4,13 +4,12 @@ var pictureTemplate = document.querySelector('#picture').content.querySelector('
 var picturesList = document.querySelector('.pictures');
 
 var getRandomInt = function (min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var generatePictures = function () {
-  var arr = [];
+var generatePicturesContentArray = function () {
+  var result = [];
+  var ITEMS_QUANTITY = 25;
   var names = ['Олег', 'Сергей', 'Ольга', 'Катя', 'Денис', 'Андрей'];
   var commentsTemplates = [
     'Всё отлично!',
@@ -21,15 +20,15 @@ var generatePictures = function () {
     'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
   ];
 
-  for (var i = 1; i <= 25; i++) {
+  for (var i = 1; i <= ITEMS_QUANTITY; i++) {
     var tempObject = {};
 
     tempObject.url = 'photos/' + i + '.jpg';
-    tempObject.description = '';
+    tempObject.description = 'Описание фотографии';
     tempObject.likes = getRandomInt(15, 200);
     tempObject.comments = [];
 
-    for (var k = 0; k < getRandomInt(1, 3); k++) {
+    for (var k = 0; k < getRandomInt(1, 15); k++) {
       var tempCommentObject = {};
       tempCommentObject.avatar = 'img/avatar-' + getRandomInt(1, 6) + '.svg';
       tempCommentObject.message = commentsTemplates[getRandomInt(0, commentsTemplates.length - 1)];
@@ -38,13 +37,13 @@ var generatePictures = function () {
       tempObject.comments.push(tempCommentObject);
     }
 
-    arr.push(tempObject);
+    result.push(tempObject);
   }
 
-  return arr;
+  return result;
 };
 
-var pictures = generatePictures();
+var picturesContent = generatePicturesContentArray();
 
 var renderPictures = function (pictureObject) {
   var pictureItem = pictureTemplate.cloneNode(true);
@@ -64,6 +63,6 @@ var createPictureNodes = function (block, array) {
 
 var fragment = document.createDocumentFragment();
 
-createPictureNodes(fragment, pictures);
+createPictureNodes(fragment, picturesContent);
 
 picturesList.appendChild(fragment);
