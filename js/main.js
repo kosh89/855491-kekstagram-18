@@ -3,6 +3,15 @@
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesList = document.querySelector('.pictures');
 
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureImg = document.querySelector('.big-picture__img img');
+var likesCount = document.querySelector('.likes-count');
+var commentsCountBlock = document.querySelector('.social__comment-count');
+var commentsCount = document.querySelector('.comments-count');
+var socialComments = document.querySelector('.social__comments');
+var socialCaption = document.querySelector('.social__caption');
+var commentsLoader = document.querySelector('.comments-loader');
+
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -66,3 +75,21 @@ var fragment = document.createDocumentFragment();
 createPictureNodes(fragment, picturesContent);
 
 picturesList.appendChild(fragment);
+
+//  показываем первую картинку на весь экран
+bigPicture.classList.remove('hidden');
+
+bigPictureImg.src = picturesContent[0].url;
+likesCount.textContent = picturesContent[0].likes;
+commentsCount.textContent = picturesContent[0].comments.length;
+
+//  очищаем комментарии из разметки
+socialComments.textContent = '';
+
+for (var i = 0; i < picturesContent[0].comments.length; i++) {
+  socialComments.innerHTML += '<li class="social__comment"><img class="social__picture" src=' + picturesContent[0].comments[i].avatar + ' alt=' + picturesContent[0].comments[i].name + ' width="35" height="35"> <p class="social__text">' + picturesContent[0].comments[i].message + '</p></li>';
+}
+
+socialCaption.textContent = picturesContent[0].description;
+commentsCountBlock.classList.add('visually-hidden');
+commentsLoader.classList.add('visually-hidden');
