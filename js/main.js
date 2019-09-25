@@ -12,6 +12,11 @@ var socialComments = document.querySelector('.social__comments');
 var socialCaption = document.querySelector('.social__caption');
 var commentsLoader = document.querySelector('.comments-loader');
 
+var uploadFile = document.querySelector('#upload-file');
+var editForm = document.querySelector('.img-upload__overlay');
+var editFormCloseButton = editForm.querySelector('#upload-cancel');
+var ESC_KEYCODE = 27;
+
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -76,7 +81,7 @@ createPictureNodes(fragment, picturesContent);
 
 picturesList.appendChild(fragment);
 
-//  показываем первую картинку на весь экран
+/* //  показываем первую картинку на весь экран
 bigPicture.classList.remove('hidden');
 
 bigPictureImg.src = picturesContent[0].url;
@@ -92,4 +97,33 @@ for (var i = 0; i < picturesContent[0].comments.length; i++) {
 
 socialCaption.textContent = picturesContent[0].description;
 commentsCountBlock.classList.add('visually-hidden');
-commentsLoader.classList.add('visually-hidden');
+commentsLoader.classList.add('visually-hidden'); */
+
+var onEditFormEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeEditForm();
+  }
+};
+
+var clearUploadFile = function () {
+  uploadFile.value = '';
+};
+
+var showEditForm = function () {
+  editForm.classList.remove('hidden');
+  document.addEventListener('keydown', onEditFormEscPress);
+};
+
+var closeEditForm = function () {
+  editForm.classList.add('hidden');
+  document.removeEventListener('keydown', onEditFormEscPress);
+  clearUploadFile();
+};
+
+uploadFile.addEventListener('change', function () {
+  showEditForm();
+});
+
+editFormCloseButton.addEventListener('click', function () {
+  closeEditForm();
+});
