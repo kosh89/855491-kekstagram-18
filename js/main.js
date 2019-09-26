@@ -3,7 +3,7 @@
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesList = document.querySelector('.pictures');
 
-var bigPicture = document.querySelector('.big-picture');
+/* var bigPicture = document.querySelector('.big-picture'); */
 var bigPictureImg = document.querySelector('.big-picture__img img');
 var likesCount = document.querySelector('.likes-count');
 var commentsCountBlock = document.querySelector('.social__comment-count');
@@ -88,8 +88,8 @@ commentsCount.textContent = picturesContent[0].comments.length;
 //  очищаем комментарии из разметки
 socialComments.textContent = '';
 
-for (var i = 0; i < picturesContent[0].comments.length; i++) {
-  socialComments.innerHTML += '<li class="social__comment"><img class="social__picture" src=' + picturesContent[0].comments[i].avatar + ' alt=' + picturesContent[0].comments[i].name + ' width="35" height="35"> <p class="social__text">' + picturesContent[0].comments[i].message + '</p></li>';
+for (var m = 0; m < picturesContent[0].comments.length; m++) {
+  socialComments.innerHTML += '<li class="social__comment"><img class="social__picture" src=' + picturesContent[0].comments[m].avatar + ' alt=' + picturesContent[0].comments[m].name + ' width="35" height="35"> <p class="social__text">' + picturesContent[0].comments[m].message + '</p></li>';
 }
 
 socialCaption.textContent = picturesContent[0].description;
@@ -272,4 +272,83 @@ effects.addEventListener('change', function (evt) {
   toggleEffectLevelSlider(evt);
   changeClassToPreviewImage(evt);
   resetEffectLevel();
+});
+
+//  валидация хэштегов
+var hashtagField = document.querySelector('.text__hashtags');
+
+//  хэш-тег начинается с символа # (решётка)
+var isHashSymbolFirst = function (element) {
+  if (element[0] === '#') {
+    return true;
+  }
+
+  return false;
+};
+
+//  хеш-тег не может состоять только из одной решётки;
+var isSingleHashSymbol = function (element) {
+  if (element === '#') {
+    return true;
+  }
+
+  return false;
+};
+
+//  один и тот же хэш-тег не может быть использован дважды
+var isSimilarHashtags = function (array) {
+  var tempArray = [];
+  for (var i = 0; i < array.length; i++) {
+    var arrayImem = array[i].toLowerCase();
+    if (tempArray.indexOf(arrayImem) !== -1) {
+      return true;
+    }
+
+    tempArray.push(arrayImem);
+  }
+
+  return false;
+};
+
+//  нельзя указать больше пяти хэш-тегов
+var isMoreThanFive = function (array) {
+  if (array.length > 5) {
+    return true;
+  }
+
+  return false;
+};
+
+//  максимальная длина одного хэш-тега 20 символов, включая решётку
+var isMoreThanTwentySymbols = function (element) {
+  if (element.length > 20) {
+    return true;
+  }
+
+  return false;
+};
+
+hashtagField.addEventListener('invalid', function () {
+  if (!hashtagField.validity.valid) {
+    hashtagField.setCustomValidity('Возникла ошибка');
+  }
+});
+
+hashtagField.addEventListener('input', function () {
+  var arrayOfHashtags = hashtagField.value.split(' ');
+  for (var i = 0; i < arrayOfHashtags.length; i++) {
+    if (!isHashSymbolFirst(arrayOfHashtags[i])) {
+      hashtagField.setCustomValidity('Хэштег должен начинаться с #');
+    } else if (isSingleHashSymbol(arrayOfHashtags[i])) {
+      hashtagField.setCustomValidity('Хэштег не может состоять из одного симовла #');
+    } else if (isSimilarHashtags(arrayOfHashtags)) {
+      hashtagField.setCustomValidity('Хэштеги не должны повторяться');
+    } else if (isMoreThanFive(arrayOfHashtags)) {
+      hashtagField.setCustomValidity('Должно быть не более 5 хэштегов');
+    } else if (isMoreThanTwentySymbols(arrayOfHashtags[i])) {
+      hashtagField.setCustomValidity('Максимальная длина хэштега 20 символов');
+    } else {
+      hashtagField.setCustomValidity('');
+    }
+  }
 });
