@@ -285,7 +285,7 @@ var deleteEmptyElements = function (array) {
       i--;
     }
   }
-}
+};
 
 //  хэш-тег начинается с символа # (решётка)
 var isHashSymbolFirst = function (element) {
