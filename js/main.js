@@ -277,6 +277,16 @@ effects.addEventListener('change', function (evt) {
 //  валидация хэштегов
 var hashtagField = document.querySelector('.text__hashtags');
 
+//  удаление пустых элементов массива
+var deleteEmptyElements = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] === '') {
+      array.splice(i, 1);
+      i--;
+    }
+  }
+}
+
 //  хэш-тег начинается с символа # (решётка)
 var isHashSymbolFirst = function (element) {
   if (element[0] === '#') {
@@ -328,6 +338,16 @@ var isMoreThanTwentySymbols = function (element) {
   return false;
 };
 
+//  когда поле воода хэштега в фокусе, то ESC не закрывает форму
+hashtagField.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onEditFormEscPress);
+});
+
+//  Возвращаем обработчик нажатия ESC, когда поле ввода хэштега теряет фокус
+hashtagField.addEventListener('blur', function () {
+  document.addEventListener('keydown', onEditFormEscPress);
+});
+
 hashtagField.addEventListener('invalid', function () {
   if (!hashtagField.validity.valid) {
     hashtagField.setCustomValidity('Возникла ошибка');
@@ -336,6 +356,8 @@ hashtagField.addEventListener('invalid', function () {
 
 hashtagField.addEventListener('input', function () {
   var arrayOfHashtags = hashtagField.value.split(' ');
+  deleteEmptyElements(arrayOfHashtags);
+
   for (var i = 0; i < arrayOfHashtags.length; i++) {
     if (!isHashSymbolFirst(arrayOfHashtags[i])) {
       hashtagField.setCustomValidity('Хэштег должен начинаться с #');
