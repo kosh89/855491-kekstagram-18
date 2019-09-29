@@ -3,7 +3,7 @@
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesList = document.querySelector('.pictures');
 
-/* var bigPicture = document.querySelector('.big-picture'); */
+var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = document.querySelector('.big-picture__img img');
 var likesCount = document.querySelector('.likes-count');
 var commentsCountBlock = document.querySelector('.social__comment-count');
@@ -61,6 +61,26 @@ var renderPictures = function (pictureObject) {
   pictureItem.querySelector('.picture__likes').textContent = pictureObject.likes;
   pictureItem.querySelector('.picture__comments').textContent = pictureObject.comments.length;
 
+  //  при клике на картинку показываем её на весь экран и заполняем данными из объекта картинки
+  pictureItem.addEventListener('click', function () {
+    showBigPicture();
+    bigPictureImg.src = pictureObject.url;
+    likesCount.textContent = pictureObject.likes;
+    commentsCount.textContent = pictureObject.comments.length;
+
+    //  очищаем комментарий, который указан в разметке
+    socialComments.textContent = '';
+
+    //  заполняем своими комментариями
+    for (var m = 0; m < pictureObject.comments.length; m++) {
+      socialComments.innerHTML += '<li class="social__comment"><img class="social__picture" src=' + pictureObject.comments[m].avatar + ' alt=' + pictureObject.comments[m].name + ' width="35" height="35"> <p class="social__text">' + pictureObject.comments[m].message + '</p></li>';
+    }
+
+    socialCaption.textContent = pictureObject.description;
+    commentsCountBlock.classList.add('visually-hidden');
+    commentsLoader.classList.add('visually-hidden');
+  });
+
   return pictureItem;
 };
 
@@ -76,25 +96,26 @@ createPictureNodes(fragment, picturesContent);
 
 picturesList.appendChild(fragment);
 
-//  показываем первую картинку на весь экран
+//  работа с окном полноэкранного просмотра
+var bigPictureCloseButton = document.querySelector('#picture-cancel');
 
-//  временно отключаем
-/* bigPicture.classList.remove('hidden'); */
+var onBigPictureEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeBigPicture();
+  }
+};
 
-bigPictureImg.src = picturesContent[0].url;
-likesCount.textContent = picturesContent[0].likes;
-commentsCount.textContent = picturesContent[0].comments.length;
+var showBigPicture = function () {
+  bigPicture.classList.remove('hidden');
+  document.addEventListener('keydown', onBigPictureEscPress);
+};
 
-//  очищаем комментарии из разметки
-socialComments.textContent = '';
+var closeBigPicture = function () {
+  bigPicture.classList.add('hidden');
+  document.removeEventListener('keydown', onBigPictureEscPress);
+};
 
-for (var m = 0; m < picturesContent[0].comments.length; m++) {
-  socialComments.innerHTML += '<li class="social__comment"><img class="social__picture" src=' + picturesContent[0].comments[m].avatar + ' alt=' + picturesContent[0].comments[m].name + ' width="35" height="35"> <p class="social__text">' + picturesContent[0].comments[m].message + '</p></li>';
-}
-
-socialCaption.textContent = picturesContent[0].description;
-commentsCountBlock.classList.add('visually-hidden');
-commentsLoader.classList.add('visually-hidden');
+bigPictureCloseButton.addEventListener('click', closeBigPicture);
 
 //  Загрузка изображения, показ окна редактирования
 var uploadFile = document.querySelector('#upload-file');
@@ -187,9 +208,7 @@ var closeEditForm = function () {
 
 uploadFile.addEventListener('change', showEditForm);
 
-editFormCloseButton.addEventListener('click', function () {
-  closeEditForm();
-});
+editFormCloseButton.addEventListener('click', closeEditForm);
 
 //  получить интенсивность в зависимости от положения ползунка
 var getEffectIntensity = function () {
