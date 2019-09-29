@@ -295,6 +295,7 @@ effects.addEventListener('change', function (evt) {
 
 //  валидация хэштегов
 var hashtagField = document.querySelector('.text__hashtags');
+var textDescription = document.querySelector('.text__description');
 
 //  удаление пустых элементов массива
 var deleteEmptyElements = function (array) {
@@ -357,13 +358,21 @@ var isMoreThanTwentySymbols = function (element) {
   return false;
 };
 
-//  когда поле воода хэштега в фокусе, то ESC не закрывает форму
+//  когда поле ввода хэштега/комментария в фокусе, то ESC не закрывает форму
 hashtagField.addEventListener('focus', function () {
   document.removeEventListener('keydown', onEditFormEscPress);
 });
 
-//  Возвращаем обработчик нажатия ESC, когда поле ввода хэштега теряет фокус
+textDescription.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onEditFormEscPress);
+});
+
+//  Возвращаем обработчик нажатия ESC, когда поле ввода хэштега/комментария теряет фокус
 hashtagField.addEventListener('blur', function () {
+  document.addEventListener('keydown', onEditFormEscPress);
+});
+
+textDescription.addEventListener('blur', function () {
   document.addEventListener('keydown', onEditFormEscPress);
 });
 
