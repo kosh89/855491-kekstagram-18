@@ -63,7 +63,6 @@ var renderPictures = function (pictureObject) {
 
   //  при клике на картинку показываем её на весь экран и заполняем данными из объекта картинки
   pictureItem.addEventListener('click', function () {
-    showBigPicture();
     bigPictureImg.src = pictureObject.url;
     likesCount.textContent = pictureObject.likes;
     commentsCount.textContent = pictureObject.comments.length;
@@ -79,6 +78,8 @@ var renderPictures = function (pictureObject) {
     socialCaption.textContent = pictureObject.description;
     commentsCountBlock.classList.add('visually-hidden');
     commentsLoader.classList.add('visually-hidden');
+
+    showBigPicture();
   });
 
   return pictureItem;
