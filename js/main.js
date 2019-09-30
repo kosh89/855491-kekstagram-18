@@ -379,7 +379,7 @@ textDescription.addEventListener('blur', function () {
 
 hashtagField.addEventListener('invalid', function () {
   if (!hashtagField.validity.valid) {
-    hashtagField.setCustomValidity('Возникла ошибка');
+    hashtagField.setCustomValidity(hashtagField.validationMessage);
   }
 });
 
