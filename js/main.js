@@ -311,7 +311,6 @@ effects.addEventListener('change', function (evt) {
 
 //  валидация хэштегов
 var hashtagField = document.querySelector('.text__hashtags');
-var textDescription = document.querySelector('.text__description');
 
 //  удаление пустых элементов массива
 var deleteEmptyElements = function (array) {
