@@ -390,14 +390,19 @@ hashtagField.addEventListener('input', function () {
   for (var i = 0; i < arrayOfHashtags.length; i++) {
     if (!isHashSymbolFirst(arrayOfHashtags[i])) {
       hashtagField.setCustomValidity('Хэштег должен начинаться с #');
+      return;
     } else if (isSingleHashSymbol(arrayOfHashtags[i])) {
       hashtagField.setCustomValidity('Хэштег не может состоять из одного симовла #');
+      return;
     } else if (isSimilarHashtags(arrayOfHashtags)) {
       hashtagField.setCustomValidity('Хэштеги не должны повторяться');
+      return;
     } else if (isMoreThanFive(arrayOfHashtags)) {
       hashtagField.setCustomValidity('Должно быть не более 5 хэштегов');
+      return;
     } else if (isMoreThanTwentySymbols(arrayOfHashtags[i])) {
       hashtagField.setCustomValidity('Максимальная длина хэштега 20 символов');
+      return;
     } else {
       hashtagField.setCustomValidity('');
     }
