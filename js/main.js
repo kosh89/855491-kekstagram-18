@@ -61,26 +61,38 @@ var renderPictures = function (pictureObject) {
   pictureItem.querySelector('.picture__likes').textContent = pictureObject.likes;
   pictureItem.querySelector('.picture__comments').textContent = pictureObject.comments.length;
 
-  //  при клике на картинку показываем её на весь экран и заполняем данными из объекта картинки
-  pictureItem.addEventListener('click', function () {
+  //  формируем строку с комментариями
+  var getCommentsHTML = function (comments) {
+    var commentsString = '';
+
+    for (var i = 0; i < comments.length; i++) {
+      commentsString += '<li class="social__comment"><img class="social__picture" src=' + comments[i].avatar + ' alt=' + comments[i].name + ' width="35" height="35"> <p class="social__text">' + comments[i].message + '</p></li>';
+    }
+
+    return commentsString;
+  };
+
+  //  заполняем картинку данными из объекта картинки
+  var fillPictureItemByData = function () {
     bigPictureImg.src = pictureObject.url;
     likesCount.textContent = pictureObject.likes;
     commentsCount.textContent = pictureObject.comments.length;
+    socialCaption.textContent = pictureObject.description;
 
     //  очищаем комментарий, который указан в разметке
     socialComments.textContent = '';
 
     //  заполняем своими комментариями
-    for (var m = 0; m < pictureObject.comments.length; m++) {
-      socialComments.innerHTML += '<li class="social__comment"><img class="social__picture" src=' + pictureObject.comments[m].avatar + ' alt=' + pictureObject.comments[m].name + ' width="35" height="35"> <p class="social__text">' + pictureObject.comments[m].message + '</p></li>';
-    }
+    socialComments.innerHTML = getCommentsHTML(pictureObject.comments);
 
-    socialCaption.textContent = pictureObject.description;
     commentsCountBlock.classList.add('visually-hidden');
     commentsLoader.classList.add('visually-hidden');
 
     showBigPicture();
-  });
+  };
+
+  //  при клике на картинку показываем её на весь экран и заполняем данными из объекта картинки
+  pictureItem.addEventListener('click', fillPictureItemByData);
 
   return pictureItem;
 };
