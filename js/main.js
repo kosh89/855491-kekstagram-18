@@ -152,6 +152,9 @@ var previewImage = document.querySelector('.img-upload__preview img');
 
 var onEditFormEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.target.classList.contains('text__hashtags') || evt.target.classList.contains('text__description')) {
+      return;
+    }
     closeEditForm();
   }
 };
@@ -370,24 +373,6 @@ var isMoreThanTwentySymbols = function (element) {
 
   return false;
 };
-
-//  когда поле ввода хэштега/комментария в фокусе, то ESC не закрывает форму
-hashtagField.addEventListener('focus', function () {
-  document.removeEventListener('keydown', onEditFormEscPress);
-});
-
-textDescription.addEventListener('focus', function () {
-  document.removeEventListener('keydown', onEditFormEscPress);
-});
-
-//  Возвращаем обработчик нажатия ESC, когда поле ввода хэштега/комментария теряет фокус
-hashtagField.addEventListener('blur', function () {
-  document.addEventListener('keydown', onEditFormEscPress);
-});
-
-textDescription.addEventListener('blur', function () {
-  document.addEventListener('keydown', onEditFormEscPress);
-});
 
 hashtagField.addEventListener('invalid', function () {
   if (!hashtagField.validity.valid) {
