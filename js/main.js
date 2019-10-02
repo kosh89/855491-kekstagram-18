@@ -3,7 +3,7 @@
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesList = document.querySelector('.pictures');
 
-/* var bigPicture = document.querySelector('.big-picture'); */
+var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = document.querySelector('.big-picture__img img');
 var likesCount = document.querySelector('.likes-count');
 var commentsCountBlock = document.querySelector('.social__comment-count');
@@ -61,6 +61,39 @@ var renderPictures = function (pictureObject) {
   pictureItem.querySelector('.picture__likes').textContent = pictureObject.likes;
   pictureItem.querySelector('.picture__comments').textContent = pictureObject.comments.length;
 
+  //  формируем строку с комментариями
+  var getCommentsHTML = function (comments) {
+    var commentsString = '';
+
+    for (var i = 0; i < comments.length; i++) {
+      commentsString += '<li class="social__comment"><img class="social__picture" src=' + comments[i].avatar + ' alt=' + comments[i].name + ' width="35" height="35"> <p class="social__text">' + comments[i].message + '</p></li>';
+    }
+
+    return commentsString;
+  };
+
+  //  заполняем картинку данными из объекта картинки
+  var fillPictureItemByData = function () {
+    bigPictureImg.src = pictureObject.url;
+    likesCount.textContent = pictureObject.likes;
+    commentsCount.textContent = pictureObject.comments.length;
+    socialCaption.textContent = pictureObject.description;
+
+    //  очищаем комментарий, который указан в разметке
+    socialComments.textContent = '';
+
+    //  заполняем своими комментариями
+    socialComments.innerHTML = getCommentsHTML(pictureObject.comments);
+
+    commentsCountBlock.classList.add('visually-hidden');
+    commentsLoader.classList.add('visually-hidden');
+
+    showBigPicture();
+  };
+
+  //  при клике на картинку показываем её на весь экран и заполняем данными из объекта картинки
+  pictureItem.addEventListener('click', fillPictureItemByData);
+
   return pictureItem;
 };
 
@@ -76,25 +109,26 @@ createPictureNodes(fragment, picturesContent);
 
 picturesList.appendChild(fragment);
 
-//  показываем первую картинку на весь экран
+//  работа с окном полноэкранного просмотра
+var bigPictureCloseButton = document.querySelector('#picture-cancel');
 
-//  временно отключаем
-/* bigPicture.classList.remove('hidden'); */
+var onBigPictureEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeBigPicture();
+  }
+};
 
-bigPictureImg.src = picturesContent[0].url;
-likesCount.textContent = picturesContent[0].likes;
-commentsCount.textContent = picturesContent[0].comments.length;
+var showBigPicture = function () {
+  bigPicture.classList.remove('hidden');
+  document.addEventListener('keydown', onBigPictureEscPress);
+};
 
-//  очищаем комментарии из разметки
-socialComments.textContent = '';
+var closeBigPicture = function () {
+  bigPicture.classList.add('hidden');
+  document.removeEventListener('keydown', onBigPictureEscPress);
+};
 
-for (var m = 0; m < picturesContent[0].comments.length; m++) {
-  socialComments.innerHTML += '<li class="social__comment"><img class="social__picture" src=' + picturesContent[0].comments[m].avatar + ' alt=' + picturesContent[0].comments[m].name + ' width="35" height="35"> <p class="social__text">' + picturesContent[0].comments[m].message + '</p></li>';
-}
-
-socialCaption.textContent = picturesContent[0].description;
-commentsCountBlock.classList.add('visually-hidden');
-commentsLoader.classList.add('visually-hidden');
+bigPictureCloseButton.addEventListener('click', closeBigPicture);
 
 //  Загрузка изображения, показ окна редактирования
 var uploadFile = document.querySelector('#upload-file');
@@ -118,6 +152,9 @@ var previewImage = document.querySelector('.img-upload__preview img');
 
 var onEditFormEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.target.classList.contains('text__hashtags') || evt.target.classList.contains('text__description')) {
+      return;
+    }
     closeEditForm();
   }
 };
@@ -187,9 +224,7 @@ var closeEditForm = function () {
 
 uploadFile.addEventListener('change', showEditForm);
 
-editFormCloseButton.addEventListener('click', function () {
-  closeEditForm();
-});
+editFormCloseButton.addEventListener('click', closeEditForm);
 
 //  получить интенсивность в зависимости от положения ползунка
 var getEffectIntensity = function () {
@@ -338,19 +373,9 @@ var isMoreThanTwentySymbols = function (element) {
   return false;
 };
 
-//  когда поле воода хэштега в фокусе, то ESC не закрывает форму
-hashtagField.addEventListener('focus', function () {
-  document.removeEventListener('keydown', onEditFormEscPress);
-});
-
-//  Возвращаем обработчик нажатия ESC, когда поле ввода хэштега теряет фокус
-hashtagField.addEventListener('blur', function () {
-  document.addEventListener('keydown', onEditFormEscPress);
-});
-
 hashtagField.addEventListener('invalid', function () {
   if (!hashtagField.validity.valid) {
-    hashtagField.setCustomValidity('Возникла ошибка');
+    hashtagField.setCustomValidity(hashtagField.validationMessage);
   }
 });
 
@@ -361,14 +386,19 @@ hashtagField.addEventListener('input', function () {
   for (var i = 0; i < arrayOfHashtags.length; i++) {
     if (!isHashSymbolFirst(arrayOfHashtags[i])) {
       hashtagField.setCustomValidity('Хэштег должен начинаться с #');
+      return;
     } else if (isSingleHashSymbol(arrayOfHashtags[i])) {
       hashtagField.setCustomValidity('Хэштег не может состоять из одного симовла #');
+      return;
     } else if (isSimilarHashtags(arrayOfHashtags)) {
       hashtagField.setCustomValidity('Хэштеги не должны повторяться');
+      return;
     } else if (isMoreThanFive(arrayOfHashtags)) {
       hashtagField.setCustomValidity('Должно быть не более 5 хэштегов');
+      return;
     } else if (isMoreThanTwentySymbols(arrayOfHashtags[i])) {
       hashtagField.setCustomValidity('Максимальная длина хэштега 20 символов');
+      return;
     } else {
       hashtagField.setCustomValidity('');
     }
