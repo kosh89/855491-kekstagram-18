@@ -1,22 +1,23 @@
 'use strict';
 
-var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+/* var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesList = document.querySelector('.pictures');
-
 var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = document.querySelector('.big-picture__img img');
+
 var likesCount = document.querySelector('.likes-count');
 var commentsCountBlock = document.querySelector('.social__comment-count');
 var commentsCount = document.querySelector('.comments-count');
 var socialComments = document.querySelector('.social__comments');
 var socialCaption = document.querySelector('.social__caption');
-var commentsLoader = document.querySelector('.comments-loader');
+var commentsLoader = document.querySelector('.comments-loader'); */
 
-var getRandomInt = function (min, max) {
+/* var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}; */
 
-var generatePicturesContentArray = function () {
+
+/* /* var generatePicturesContentArray = function () {
   var result = [];
   var ITEMS_QUANTITY = 25;
   var names = ['Олег', 'Сергей', 'Ольга', 'Катя', 'Денис', 'Андрей'];
@@ -95,9 +96,9 @@ var renderPictures = function (pictureObject) {
   pictureItem.addEventListener('click', fillPictureItemByData);
 
   return pictureItem;
-};
+}; */
 
-var createPictureNodes = function (block, array) {
+/* var createPictureNodes = function (block, array) {
   for (var i = 0; i < array.length; i++) {
     block.appendChild(renderPictures(array[i]));
   }
@@ -107,10 +108,10 @@ var fragment = document.createDocumentFragment();
 
 createPictureNodes(fragment, picturesContent);
 
-picturesList.appendChild(fragment);
+picturesList.appendChild(fragment); */
 
 //  работа с окном полноэкранного просмотра
-var bigPictureCloseButton = document.querySelector('#picture-cancel');
+/* var bigPictureCloseButton = document.querySelector('#picture-cancel');
 
 var onBigPictureEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -128,13 +129,13 @@ var closeBigPicture = function () {
   document.removeEventListener('keydown', onBigPictureEscPress);
 };
 
-bigPictureCloseButton.addEventListener('click', closeBigPicture);
+bigPictureCloseButton.addEventListener('click', closeBigPicture); */
 
 //  Загрузка изображения, показ окна редактирования
-var uploadFile = document.querySelector('#upload-file');
+/* var uploadFile = document.querySelector('#upload-file');
 var editForm = document.querySelector('.img-upload__overlay');
 var editFormCloseButton = editForm.querySelector('#upload-cancel');
-var ESC_KEYCODE = 27;
+// var ESC_KEYCODE = 27;
 
 var effectLevelSlider = document.querySelector('.effect-level');
 var effectLevelValue = document.querySelector('.effect-level__value');
@@ -178,7 +179,6 @@ var resetEffectLevel = function () {
   effectLevelValue.value = 100;
   effectLevelPin.style.left = '100%';
   effectLelvelDepth.style.width = '100%';
-  /* setCurrentFilterToPreviewImage(); */
 };
 
 //  сбросить текущий эффект
@@ -307,9 +307,9 @@ effects.addEventListener('change', function (evt) {
   toggleEffectLevelSlider(evt);
   changeClassToPreviewImage(evt);
   resetEffectLevel();
-});
+}); */
 
-//  валидация хэштегов
+/* //  валидация хэштегов
 var hashtagField = document.querySelector('.text__hashtags');
 
 //  удаление пустых элементов массива
@@ -404,3 +404,4 @@ hashtagField.addEventListener('input', function () {
     }
   }
 });
+ */
