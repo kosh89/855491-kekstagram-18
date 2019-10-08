@@ -155,7 +155,7 @@
       case ('heat'):
         currentCss = 'brightness(' + getEffectIntensity() / CSS_FILTER_COEFFICIENT + ')';
         break;
-      case ('none'):
+      default:
         currentCss = '';
         break;
     }
