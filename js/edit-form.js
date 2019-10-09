@@ -1,6 +1,12 @@
 'use strict';
 
 (function () {
+  var PIN_LEFT_EXTREME_POSITION = 0;
+  var PIN_RIGHT_EXTREME_POSITION = 453;
+  var PIN_POSITION_COEFFICIENT = 4.53;
+  var CSS_FILTER_COEFFICIENT = 33.3;
+  var SCALE_STEP = 25;
+
   //  Загрузка изображения, показ окна редактирования
   var uploadFile = document.querySelector('#upload-file');
   var editForm = document.querySelector('.img-upload__overlay');
@@ -11,13 +17,11 @@
   var effectLevelPin = document.querySelector('.effect-level__pin');
   var effectLelvelDepth = document.querySelector('.effect-level__depth');
   var effects = document.querySelector('.effects');
-  var CSS_FILTER_COEFFICIENT = 33.3;
   var currentEffect = document.querySelector('#effect-none');
 
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControlValue = document.querySelector('.scale__control--value');
-  var SCALE_STEP = 25;
   var previewImage = document.querySelector('.img-upload__preview img');
 
   var onEditFormEscPress = function (evt) {
@@ -48,7 +52,6 @@
     effectLevelValue.value = 100;
     effectLevelPin.style.left = '100%';
     effectLelvelDepth.style.width = '100%';
-    /* setCurrentFilterToPreviewImage(); */
   };
 
   //  сбросить текущий эффект
@@ -98,7 +101,7 @@
 
   //  получить интенсивность в зависимости от положения ползунка
   var getEffectIntensity = function () {
-    return parseInt(effectLevelPin.style.left, 10);
+    return parseInt(effectLevelPin.style.left, 10) / PIN_POSITION_COEFFICIENT;
   };
 
   //  увеличить масштаб
@@ -168,7 +171,39 @@
     previewImage.style.filter = getCurrentCssFilter();
   };
 
-  effectLevelPin.addEventListener('mouseup', setCurrentFilterToPreviewImage);
+  //  обработка изменения положения ползунка интенсивности эффекта
+  effectLevelPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startX = evt.clientX;
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shiftX = startX - moveEvt.clientX;
+      startX = moveEvt.clientX;
+
+      var pinNewPosition = effectLevelPin.offsetLeft - shiftX;
+
+      if (pinNewPosition < PIN_LEFT_EXTREME_POSITION || pinNewPosition > PIN_RIGHT_EXTREME_POSITION) {
+        return;
+      } else {
+        effectLevelPin.style.left = pinNewPosition + 'px';
+      }
+
+      setCurrentFilterToPreviewImage();
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mousemove', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
 
   //  делегирование
   effects.addEventListener('change', function (evt) {
