@@ -172,34 +172,36 @@
   };
 
   //  обработка изменения положения ползунка интенсивности эффекта
+  var startX = 0;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shiftX = startX - moveEvt.clientX;
+    startX = moveEvt.clientX;
+
+    var pinNewPosition = effectLevelPin.offsetLeft - shiftX;
+
+    if (pinNewPosition < PIN_LEFT_EXTREME_POSITION || pinNewPosition > PIN_RIGHT_EXTREME_POSITION) {
+      return;
+    } else {
+      effectLevelPin.style.left = pinNewPosition + 'px';
+    }
+
+    setCurrentFilterToPreviewImage();
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mousemove', onMouseUp);
+  };
+
   effectLevelPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var startX = evt.clientX;
-
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shiftX = startX - moveEvt.clientX;
-      startX = moveEvt.clientX;
-
-      var pinNewPosition = effectLevelPin.offsetLeft - shiftX;
-
-      if (pinNewPosition < PIN_LEFT_EXTREME_POSITION || pinNewPosition > PIN_RIGHT_EXTREME_POSITION) {
-        return;
-      } else {
-        effectLevelPin.style.left = pinNewPosition + 'px';
-      }
-
-      setCurrentFilterToPreviewImage();
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mousemove', onMouseUp);
-    };
+    startX = evt.clientX;
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
