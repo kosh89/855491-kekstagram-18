@@ -182,10 +182,10 @@
 
     var pinNewPosition = effectLevelPin.offsetLeft - shiftX;
 
-    if (pinNewPosition < PIN_LEFT_EXTREME_POSITION || pinNewPosition > PIN_RIGHT_EXTREME_POSITION) {
-      return;
-    } else {
+    if (pinNewPosition > PIN_LEFT_EXTREME_POSITION && pinNewPosition < PIN_RIGHT_EXTREME_POSITION) {
       effectLevelPin.style.left = pinNewPosition + 'px';
+    } else {
+      return;
     }
 
     setCurrentFilterToPreviewImage();
