@@ -70,13 +70,38 @@
     picturesList.appendChild(fragment);
   };
 
-  //  обработчик ошибки при загрузке фотографий с сервера
-  var loadErrorHandler = function (errorMessage) {
-    var errorItem = errorTemplate.cloneNode(true);
+  //  обработчик ошибки при загрузке фотографий с сервера / на сервер
+  var errorItem = errorTemplate.cloneNode(true);
+  errorItem.style.display = 'none';
+  document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
 
-    errorItem.querySelector('.error__title').textContent = errorMessage;
-    document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
+  var errorButtons = errorItem.querySelectorAll('.error__button');
+
+  var errorMessageClose = function () {
+    errorItem.style.display = 'none';
+    document.removeEventListener('keydown', onErrorMessageEscPress);
   };
 
-  window.load(loadSuccessHandler, loadErrorHandler);
+  var onErrorMessageEscPress = function (evt) {
+    if (evt.keyCode === window.utils.ESC_KEYCODE) {
+      errorMessageClose();
+    }
+  };
+
+  errorButtons.forEach(function (elem) {
+    elem.addEventListener('click', errorMessageClose);
+  });
+
+  errorItem.addEventListener('click', errorMessageClose);
+
+  window.data = {
+    serverRequestErrorHandler: function (errorMessage) {
+      errorItem.querySelector('.error__title').textContent = errorMessage;
+      errorItem.style.display = 'flex';
+
+      document.addEventListener('keydown', onErrorMessageEscPress);
+    }
+  };
+
+  window.load(loadSuccessHandler, window.data.serverRequestErrorHandler);
 })();
