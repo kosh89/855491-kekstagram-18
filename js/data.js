@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var picturesList = document.querySelector('.pictures');
   var bigPictureImg = document.querySelector('.big-picture__img img');
@@ -70,38 +69,5 @@
     picturesList.appendChild(fragment);
   };
 
-  //  обработчик ошибки при загрузке фотографий с сервера / на сервер
-  var errorItem = errorTemplate.cloneNode(true);
-  errorItem.style.display = 'none';
-  document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
-
-  var errorButtons = errorItem.querySelectorAll('.error__button');
-
-  var closeErrorMessage = function () {
-    errorItem.style.display = 'none';
-    document.removeEventListener('keydown', onErrorMessageEscPress);
-  };
-
-  var onErrorMessageEscPress = function (evt) {
-    if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeErrorMessage();
-    }
-  };
-
-  errorButtons.forEach(function (elem) {
-    elem.addEventListener('click', closeErrorMessage);
-  });
-
-  errorItem.addEventListener('click', closeErrorMessage);
-
-  window.data = {
-    serverRequestErrorHandler: function (errorMessage) {
-      errorItem.querySelector('.error__title').textContent = errorMessage;
-      errorItem.style.display = 'flex';
-
-      document.addEventListener('keydown', onErrorMessageEscPress);
-    }
-  };
-
-  window.load(loadSuccessHandler, window.data.serverRequestErrorHandler);
+  window.backend.load(loadSuccessHandler, window.serverRequestErrorHandler);
 })();

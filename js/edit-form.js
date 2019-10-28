@@ -13,6 +13,7 @@
   var editFormCloseButton = editForm.querySelector('#upload-cancel');
   var imgUploadForm = document.querySelector('.img-upload__form');
   var succesTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var effectLevelSlider = document.querySelector('.effect-level');
   var effectLevelValue = document.querySelector('.effect-level__value');
@@ -225,19 +226,19 @@
 
   var successButton = successItem.querySelector('.success__button');
 
-  var closeSuccessMessage = function () {
+  var closeSuccessMessageHandler = function () {
     successItem.style.display = 'none';
     document.removeEventListener('keydown', onSuccessMessageEscPress);
   };
 
   var onSuccessMessageEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeSuccessMessage();
+      closeSuccessMessageHandler();
     }
   };
 
-  successButton.addEventListener('click', closeSuccessMessage);
-  successItem.addEventListener('click', closeSuccessMessage);
+  successButton.addEventListener('click', closeSuccessMessageHandler);
+  successItem.addEventListener('click', closeSuccessMessageHandler);
 
   var uploadSuccessHandler = function () {
     closeEditForm();
@@ -247,10 +248,41 @@
     document.addEventListener('keydown', onSuccessMessageEscPress);
   };
 
+  //  работа с окном ошибки отправки данных на сервер
+  var errorItem = errorTemplate.cloneNode(true);
+  errorItem.style.display = 'none';
+  document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
+
+  var errorButtons = errorItem.querySelectorAll('.error__button');
+
+  var closeErrorMessageHandler = function () {
+    errorItem.style.display = 'none';
+    document.removeEventListener('keydown', onErrorMessageEscPress);
+  };
+
+  var onErrorMessageEscPress = function (evt) {
+    if (evt.keyCode === window.utils.ESC_KEYCODE) {
+      closeErrorMessageHandler();
+    }
+  };
+
+  errorButtons.forEach(function (elem) {
+    elem.addEventListener('click', closeErrorMessageHandler);
+  });
+
+  errorItem.addEventListener('click', closeErrorMessageHandler);
+
+  window.serverRequestErrorHandler = function (errorMessage) {
+    errorItem.querySelector('.error__title').textContent = errorMessage;
+    errorItem.style.display = 'flex';
+
+    document.addEventListener('keydown', onErrorMessageEscPress);
+  };
+
   //  отправка данных на сервер
   imgUploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
 
-    window.save(new FormData(imgUploadForm), uploadSuccessHandler, window.data.serverRequestErrorHandler);
+    window.backend.save(new FormData(imgUploadForm), uploadSuccessHandler, window.serverRequestErrorHandler);
   });
 })();

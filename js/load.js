@@ -2,6 +2,8 @@
 
 (function () {
   var API_URL = 'https://js.dump.academy/kekstagram/';
+  var GET_METHOD = 'GET';
+  var POST_METHOD = 'POST';
 
   var request = function (url, method, data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -33,11 +35,13 @@
     xhr.send(data);
   };
 
-  window.load = function (onSuccess, onError) {
-    request(API_URL + 'data', 'GET', null, onSuccess, onError);
-  };
+  window.backend = {
+    load: function (onSuccess, onError) {
+      request(API_URL + 'data', GET_METHOD, null, onSuccess, onError);
+    },
 
-  window.save = function (data, onSuccess, onError) {
-    request(API_URL, 'POST', data, onSuccess, onError);
+    save: function (data, onSuccess, onError) {
+      request(API_URL, POST_METHOD, data, onSuccess, onError);
+    }
   };
 })();
