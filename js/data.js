@@ -62,7 +62,7 @@
   };
 
   //  обработчик успешной загрузки фотографий с сервера
-  var loadOnsuccess = function (picturesArray) {
+  var loadSuccessHandler = function (picturesArray) {
     var fragment = document.createDocumentFragment();
 
     createPictureNodes(fragment, picturesArray);
@@ -71,12 +71,12 @@
   };
 
   //  обработчик ошибки при загрузке фотографий с сервера
-  var loadOnError = function (errorMessage) {
+  var loadErrorHandler = function (errorMessage) {
     var errorItem = errorTemplate.cloneNode(true);
 
     errorItem.querySelector('.error__title').textContent = errorMessage;
     document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
   };
 
-  window.load(loadOnsuccess, loadOnError);
+  window.load(loadSuccessHandler, loadErrorHandler);
 })();
