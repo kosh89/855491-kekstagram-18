@@ -11,6 +11,8 @@
   var uploadFile = document.querySelector('#upload-file');
   var editForm = document.querySelector('.img-upload__overlay');
   var editFormCloseButton = editForm.querySelector('#upload-cancel');
+  var imgUploadForm = document.querySelector('.img-upload__form');
+  var succesTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var effectLevelSlider = document.querySelector('.effect-level');
   var effectLevelValue = document.querySelector('.effect-level__value');
@@ -214,5 +216,41 @@
     toggleEffectLevelSlider(evt);
     changeClassToPreviewImage(evt);
     resetEffectLevel();
+  });
+
+  //  работа с окном успешной отправки данных на сервер
+  var successItem = succesTemplate.cloneNode(true);
+  successItem.style.display = 'none';
+  document.querySelector('main').insertAdjacentElement('afterbegin', successItem);
+
+  var successButton = successItem.querySelector('.success__button');
+
+  var successMessageClose = function () {
+    successItem.style.display = 'none';
+    document.removeEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var onSuccessMessageEscPress = function (evt) {
+    if (evt.keyCode === window.utils.ESC_KEYCODE) {
+      successMessageClose();
+    }
+  };
+
+  successButton.addEventListener('click', successMessageClose);
+  successItem.addEventListener('click', successMessageClose);
+
+  var uploadSuccessHandler = function () {
+    closeEditForm();
+
+    successItem.style.display = 'flex';
+
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  //  отправка данных на сервер
+  imgUploadForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.save(new FormData(imgUploadForm), uploadSuccessHandler, window.data.serverRequestErrorHandler);
   });
 })();
