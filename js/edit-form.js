@@ -225,19 +225,19 @@
 
   var successButton = successItem.querySelector('.success__button');
 
-  var successMessageClose = function () {
+  var closeSuccessMessage = function () {
     successItem.style.display = 'none';
     document.removeEventListener('keydown', onSuccessMessageEscPress);
   };
 
   var onSuccessMessageEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      successMessageClose();
+      closeSuccessMessage();
     }
   };
 
-  successButton.addEventListener('click', successMessageClose);
-  successItem.addEventListener('click', successMessageClose);
+  successButton.addEventListener('click', closeSuccessMessage);
+  successItem.addEventListener('click', closeSuccessMessage);
 
   var uploadSuccessHandler = function () {
     closeEditForm();

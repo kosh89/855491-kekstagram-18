@@ -77,22 +77,22 @@
 
   var errorButtons = errorItem.querySelectorAll('.error__button');
 
-  var errorMessageClose = function () {
+  var closeErrorMessage = function () {
     errorItem.style.display = 'none';
     document.removeEventListener('keydown', onErrorMessageEscPress);
   };
 
   var onErrorMessageEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      errorMessageClose();
+      closeErrorMessage();
     }
   };
 
   errorButtons.forEach(function (elem) {
-    elem.addEventListener('click', errorMessageClose);
+    elem.addEventListener('click', closeErrorMessage);
   });
 
-  errorItem.addEventListener('click', errorMessageClose);
+  errorItem.addEventListener('click', closeErrorMessage);
 
   window.data = {
     serverRequestErrorHandler: function (errorMessage) {
