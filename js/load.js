@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
-  var URL = 'https://js.dump.academy/kekstagram/data';
+  var API_URL = 'https://js.dump.academy/kekstagram/';
 
-  window.load = function (onSuccess, onError) {
+  var request = function (url, method, data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -29,7 +29,15 @@
 
     xhr.timeout = 5000;
 
-    xhr.open('GET', URL);
-    xhr.send();
+    xhr.open(method, url);
+    xhr.send(data);
+  };
+
+  window.load = function (onSuccess, onError) {
+    request(API_URL + 'data', 'GET', null, onSuccess, onError);
+  };
+
+  window.save = function (data, onSuccess, onError) {
+    request(API_URL, 'POST', data, onSuccess, onError);
   };
 })();
