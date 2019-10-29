@@ -13,7 +13,7 @@
   var editFormCloseButton = editForm.querySelector('#upload-cancel');
   var imgUploadForm = document.querySelector('.img-upload__form');
   var succesTemplate = document.querySelector('#success').content.querySelector('.success');
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
 
   var effectLevelSlider = document.querySelector('.effect-level');
   var effectLevelValue = document.querySelector('.effect-level__value');
@@ -226,21 +226,21 @@
 
   var successButton = successItem.querySelector('.success__button');
 
-  var closeSuccessMessageHandler = function () {
+  var onSuccessMessageClose = function () {
     successItem.style.display = 'none';
     document.removeEventListener('keydown', onSuccessMessageEscPress);
   };
 
   var onSuccessMessageEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeSuccessMessageHandler();
+      onSuccessMessageClose();
     }
   };
 
-  successButton.addEventListener('click', closeSuccessMessageHandler);
-  successItem.addEventListener('click', closeSuccessMessageHandler);
+  successButton.addEventListener('click', onSuccessMessageClose);
+  successItem.addEventListener('click', onSuccessMessageClose);
 
-  var uploadSuccessHandler = function () {
+  var onUploadSuccess = function () {
     closeEditForm();
 
     successItem.style.display = 'flex';
@@ -248,41 +248,12 @@
     document.addEventListener('keydown', onSuccessMessageEscPress);
   };
 
-  //  работа с окном ошибки отправки данных на сервер
-  var errorItem = errorTemplate.cloneNode(true);
-  errorItem.style.display = 'none';
-  document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
 
-  var errorButtons = errorItem.querySelectorAll('.error__button');
-
-  var closeErrorMessageHandler = function () {
-    errorItem.style.display = 'none';
-    document.removeEventListener('keydown', onErrorMessageEscPress);
-  };
-
-  var onErrorMessageEscPress = function (evt) {
-    if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeErrorMessageHandler();
-    }
-  };
-
-  errorButtons.forEach(function (elem) {
-    elem.addEventListener('click', closeErrorMessageHandler);
-  });
-
-  errorItem.addEventListener('click', closeErrorMessageHandler);
-
-  window.serverRequestErrorHandler = function (errorMessage) {
-    errorItem.querySelector('.error__title').textContent = errorMessage;
-    errorItem.style.display = 'flex';
-
-    document.addEventListener('keydown', onErrorMessageEscPress);
-  };
 
   //  отправка данных на сервер
   imgUploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
 
-    window.backend.save(new FormData(imgUploadForm), uploadSuccessHandler, window.serverRequestErrorHandler);
+    window.backend.save(new FormData(imgUploadForm), onUploadSuccess, window.backend.onServerRequestError);
   });
 })();

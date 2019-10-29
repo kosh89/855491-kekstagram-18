@@ -61,7 +61,7 @@
   };
 
   //  обработчик успешной загрузки фотографий с сервера
-  var loadSuccessHandler = function (picturesArray) {
+  var onLoadSuccess = function (picturesArray) {
     var fragment = document.createDocumentFragment();
 
     createPictureNodes(fragment, picturesArray);
@@ -69,5 +69,5 @@
     picturesList.appendChild(fragment);
   };
 
-  window.backend.load(loadSuccessHandler, window.serverRequestErrorHandler);
+  window.backend.load(onLoadSuccess, window.backend.onServerRequestError);
 })();
