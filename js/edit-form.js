@@ -32,7 +32,7 @@
       if (evt.target.classList.contains('text__hashtags') || evt.target.classList.contains('text__description')) {
         return;
       }
-      closeEditForm();
+      onEditFormClose();
     }
   };
 
@@ -82,7 +82,7 @@
     uploadFile.value = '';
   };
 
-  var showEditForm = function () {
+  var onEditFormShow = function () {
     editForm.classList.remove('hidden');
     document.addEventListener('keydown', onEditFormEscPress);
     resetScale();
@@ -92,15 +92,15 @@
     hideEffectLevelSlider();
   };
 
-  var closeEditForm = function () {
+  var onEditFormClose = function () {
     editForm.classList.add('hidden');
     document.removeEventListener('keydown', onEditFormEscPress);
     clearUploadFile();
   };
 
-  uploadFile.addEventListener('change', showEditForm);
+  uploadFile.addEventListener('change', onEditFormShow);
 
-  editFormCloseButton.addEventListener('click', closeEditForm);
+  editFormCloseButton.addEventListener('click', onEditFormClose);
 
   //  получить интенсивность в зависимости от положения ползунка
   var getEffectIntensity = function () {
@@ -241,14 +241,12 @@
   successItem.addEventListener('click', onSuccessMessageClose);
 
   var onUploadSuccess = function () {
-    closeEditForm();
+    onEditFormClose();
 
     successItem.style.display = 'flex';
 
     document.addEventListener('keydown', onSuccessMessageEscPress);
   };
-
-
 
   //  отправка данных на сервер
   imgUploadForm.addEventListener('submit', function (evt) {

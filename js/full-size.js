@@ -7,7 +7,7 @@
 
   var onBigPictureEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeBigPicture();
+      onBigPictureClose();
     }
   };
 
@@ -16,10 +16,10 @@
     document.addEventListener('keydown', onBigPictureEscPress);
   };
 
-  var closeBigPicture = function () {
+  var onBigPictureClose = function () {
     bigPicture.classList.add('hidden');
     document.removeEventListener('keydown', onBigPictureEscPress);
   };
 
-  bigPictureCloseButton.addEventListener('click', closeBigPicture);
+  bigPictureCloseButton.addEventListener('click', onBigPictureClose);
 })();
