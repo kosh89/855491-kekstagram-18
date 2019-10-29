@@ -37,12 +37,12 @@
   };
 
   //  работа с окном ошибки отправки данных на сервер
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var errorItem = errorTemplate.cloneNode(true);
+  var errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
+  var errorItem = errorTemplateElement.cloneNode(true);
   errorItem.style.display = 'none';
   document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
 
-  var errorButtons = errorItem.querySelectorAll('.error__button');
+  var errorButtonsElements = errorItem.querySelectorAll('.error__button');
 
   var onErrorMessageClose = function () {
     errorItem.style.display = 'none';
@@ -55,7 +55,7 @@
     }
   };
 
-  errorButtons.forEach(function (elem) {
+  errorButtonsElements.forEach(function (elem) {
     elem.addEventListener('click', onErrorMessageClose);
   });
 

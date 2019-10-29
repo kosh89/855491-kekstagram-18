@@ -2,7 +2,7 @@
 
 (function () {
   //  валидация хэштегов
-  var hashtagField = document.querySelector('.text__hashtags');
+  var hashtagFieldElement = document.querySelector('.text__hashtags');
 
   //  удаление пустых элементов массива
   var deleteEmptyElements = function (array) {
@@ -65,34 +65,34 @@
     return false;
   };
 
-  hashtagField.addEventListener('invalid', function () {
-    if (!hashtagField.validity.valid) {
-      hashtagField.setCustomValidity(hashtagField.validationMessage);
+  hashtagFieldElement.addEventListener('invalid', function () {
+    if (!hashtagFieldElement.validity.valid) {
+      hashtagFieldElement.setCustomValidity(hashtagFieldElement.validationMessage);
     }
   });
 
-  hashtagField.addEventListener('input', function () {
-    var arrayOfHashtags = hashtagField.value.split(' ');
+  hashtagFieldElement.addEventListener('input', function () {
+    var arrayOfHashtags = hashtagFieldElement.value.split(' ');
     deleteEmptyElements(arrayOfHashtags);
 
     for (var i = 0; i < arrayOfHashtags.length; i++) {
       if (!isHashSymbolFirst(arrayOfHashtags[i])) {
-        hashtagField.setCustomValidity('Хэштег должен начинаться с #');
+        hashtagFieldElement.setCustomValidity('Хэштег должен начинаться с #');
         return;
       } else if (isSingleHashSymbol(arrayOfHashtags[i])) {
-        hashtagField.setCustomValidity('Хэштег не может состоять из одного симовла #');
+        hashtagFieldElement.setCustomValidity('Хэштег не может состоять из одного симовла #');
         return;
       } else if (isSimilarHashtags(arrayOfHashtags)) {
-        hashtagField.setCustomValidity('Хэштеги не должны повторяться');
+        hashtagFieldElement.setCustomValidity('Хэштеги не должны повторяться');
         return;
       } else if (isMoreThanFive(arrayOfHashtags)) {
-        hashtagField.setCustomValidity('Должно быть не более 5 хэштегов');
+        hashtagFieldElement.setCustomValidity('Должно быть не более 5 хэштегов');
         return;
       } else if (isMoreThanTwentySymbols(arrayOfHashtags[i])) {
-        hashtagField.setCustomValidity('Максимальная длина хэштега 20 символов');
+        hashtagFieldElement.setCustomValidity('Максимальная длина хэштега 20 символов');
         return;
       } else {
-        hashtagField.setCustomValidity('');
+        hashtagFieldElement.setCustomValidity('');
       }
     }
   });
