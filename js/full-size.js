@@ -2,24 +2,24 @@
 
 (function () {
   //  работа с окном полноэкранного просмотра
-  var bigPicture = document.querySelector('.big-picture');
-  var bigPictureCloseButton = document.querySelector('#picture-cancel');
+  var bigPictureElement = document.querySelector('.big-picture');
+  var bigPictureCloseButtonElement = document.querySelector('#picture-cancel');
 
   var onBigPictureEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeBigPicture();
+      onBigPictureClose();
     }
   };
 
   window.showBigPicture = function () {
-    bigPicture.classList.remove('hidden');
+    bigPictureElement.classList.remove('hidden');
     document.addEventListener('keydown', onBigPictureEscPress);
   };
 
-  var closeBigPicture = function () {
-    bigPicture.classList.add('hidden');
+  var onBigPictureClose = function () {
+    bigPictureElement.classList.add('hidden');
     document.removeEventListener('keydown', onBigPictureEscPress);
   };
 
-  bigPictureCloseButton.addEventListener('click', closeBigPicture);
+  bigPictureCloseButtonElement.addEventListener('click', onBigPictureClose);
 })();

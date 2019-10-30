@@ -1,9 +1,12 @@
 'use strict';
 
 (function () {
-  var URL = 'https://js.dump.academy/kekstagram/data';
+  var API_URL = 'https://js.dump.academy/kekstagram/';
+  var GET_METHOD = 'GET';
+  var POST_METHOD = 'POST';
 
-  window.load = function (onSuccess, onError) {
+
+  var request = function (url, method, data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -29,7 +32,49 @@
 
     xhr.timeout = 5000;
 
-    xhr.open('GET', URL);
-    xhr.send();
+    xhr.open(method, url);
+    xhr.send(data);
+  };
+
+  //  работа с окном ошибки отправки данных на сервер
+  var errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
+  var errorItem = errorTemplateElement.cloneNode(true);
+  errorItem.style.display = 'none';
+  document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
+
+  var errorButtonsElements = errorItem.querySelectorAll('.error__button');
+
+  var onErrorMessageClose = function () {
+    errorItem.style.display = 'none';
+    document.removeEventListener('keydown', onErrorMessageEscPress);
+  };
+
+  var onErrorMessageEscPress = function (evt) {
+    if (evt.keyCode === window.utils.ESC_KEYCODE) {
+      onErrorMessageClose();
+    }
+  };
+
+  errorButtonsElements.forEach(function (elem) {
+    elem.addEventListener('click', onErrorMessageClose);
+  });
+
+  errorItem.addEventListener('click', onErrorMessageClose);
+
+  window.backend = {
+    load: function (onSuccess, onError) {
+      request(API_URL + 'data', GET_METHOD, null, onSuccess, onError);
+    },
+
+    save: function (data, onSuccess, onError) {
+      request(API_URL, POST_METHOD, data, onSuccess, onError);
+    },
+
+    onServerRequestError: function (errorMessage) {
+      errorItem.querySelector('.error__title').textContent = errorMessage;
+      errorItem.style.display = 'flex';
+
+      document.addEventListener('keydown', onErrorMessageEscPress);
+    }
   };
 })();

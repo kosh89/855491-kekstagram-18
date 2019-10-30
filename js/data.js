@@ -1,19 +1,18 @@
 'use strict';
 
 (function () {
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-  var picturesList = document.querySelector('.pictures');
-  var bigPictureImg = document.querySelector('.big-picture__img img');
-  var likesCount = document.querySelector('.likes-count');
-  var commentsCountBlock = document.querySelector('.social__comment-count');
-  var commentsCount = document.querySelector('.comments-count');
-  var socialComments = document.querySelector('.social__comments');
-  var socialCaption = document.querySelector('.social__caption');
-  var commentsLoader = document.querySelector('.comments-loader');
+  var pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
+  var picturesListElement = document.querySelector('.pictures');
+  var bigPictureImgElement = document.querySelector('.big-picture__img img');
+  var likesCountElement = document.querySelector('.likes-count');
+  var commentsCountBlockElement = document.querySelector('.social__comment-count');
+  var commentsCountElement = document.querySelector('.comments-count');
+  var socialCommentsElement = document.querySelector('.social__comments');
+  var socialCaptionElement = document.querySelector('.social__caption');
+  var commentsLoaderElement = document.querySelector('.comments-loader');
 
   var renderPictures = function (pictureObject) {
-    var pictureItem = pictureTemplate.cloneNode(true);
+    var pictureItem = pictureTemplateElement.cloneNode(true);
 
     pictureItem.querySelector('.picture__img').src = pictureObject.url;
     pictureItem.querySelector('.picture__likes').textContent = pictureObject.likes;
@@ -32,19 +31,19 @@
 
     //  заполняем картинку данными из объекта картинки
     var fillPictureItemByData = function () {
-      bigPictureImg.src = pictureObject.url;
-      likesCount.textContent = pictureObject.likes;
-      commentsCount.textContent = pictureObject.comments.length;
-      socialCaption.textContent = pictureObject.description;
+      bigPictureImgElement.src = pictureObject.url;
+      likesCountElement.textContent = pictureObject.likes;
+      commentsCountElement.textContent = pictureObject.comments.length;
+      socialCaptionElement.textContent = pictureObject.description;
 
       //  очищаем комментарий, который указан в разметке
-      socialComments.textContent = '';
+      socialCommentsElement.textContent = '';
 
       //  заполняем своими комментариями
-      socialComments.innerHTML = getCommentsHTML(pictureObject.comments);
+      socialCommentsElement.innerHTML = getCommentsHTML(pictureObject.comments);
 
-      commentsCountBlock.classList.add('visually-hidden');
-      commentsLoader.classList.add('visually-hidden');
+      commentsCountBlockElement.classList.add('visually-hidden');
+      commentsLoaderElement.classList.add('visually-hidden');
 
       window.showBigPicture();
     };
@@ -62,21 +61,13 @@
   };
 
   //  обработчик успешной загрузки фотографий с сервера
-  var loadSuccessHandler = function (picturesArray) {
+  var onLoadSuccess = function (picturesArray) {
     var fragment = document.createDocumentFragment();
 
     createPictureNodes(fragment, picturesArray);
 
-    picturesList.appendChild(fragment);
+    picturesListElement.appendChild(fragment);
   };
 
-  //  обработчик ошибки при загрузке фотографий с сервера
-  var loadErrorHandler = function (errorMessage) {
-    var errorItem = errorTemplate.cloneNode(true);
-
-    errorItem.querySelector('.error__title').textContent = errorMessage;
-    document.querySelector('main').insertAdjacentElement('afterbegin', errorItem);
-  };
-
-  window.load(loadSuccessHandler, loadErrorHandler);
+  window.backend.load(onLoadSuccess, window.backend.onServerRequestError);
 })();
