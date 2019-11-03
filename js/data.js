@@ -25,6 +25,7 @@
     picturesListElement.appendChild(fragment);
   };
 
+  //  удаление уже отрисованных фотографий
   var removePictures = function () {
     var currentPicturesNodes = document.querySelectorAll('.picture');
 
@@ -33,6 +34,7 @@
     });
   };
 
+  //  функция для клонирования исходного массива данных с сервера
   var cloneArray = function (array) {
     var newArray = [];
 
