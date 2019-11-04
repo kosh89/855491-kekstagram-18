@@ -26,12 +26,9 @@
 
         if (arrayOfRandomIndexes.indexOf(currentIndex) === -1) {
           arrayOfRandomIndexes.push(currentIndex);
+          arrayOfRandomPictures.push(picturesArray[currentIndex]);
         }
       }
-
-      arrayOfRandomIndexes.forEach(function (element) {
-        arrayOfRandomPictures.push(picturesArray[element]);
-      });
 
       window.updatePictures(arrayOfRandomPictures);
       currentButtonBacklight(button);
