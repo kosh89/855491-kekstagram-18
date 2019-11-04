@@ -25,8 +25,6 @@
 
         if (arrayOfRandomIndexes.indexOf(currentIndex) === -1) {
           arrayOfRandomIndexes.push(currentIndex);
-        } else {
-          continue;
         }
       }
 
