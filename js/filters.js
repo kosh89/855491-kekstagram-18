@@ -18,16 +18,12 @@
     },
 
     onRandomButtonClick: function (picturesArray, button) {
-      var arrayOfRandomIndexes = [];
+      var picturesArrayCopy = window.utils.cloneArray(picturesArray);
       var arrayOfRandomPictures = [];
 
-      while (arrayOfRandomIndexes.length < RANDOM_ARRAY_LENGTH) {
-        var currentIndex = window.utils.getRandomInt(0, picturesArray.length - 1);
-
-        if (arrayOfRandomIndexes.indexOf(currentIndex) === -1) {
-          arrayOfRandomIndexes.push(currentIndex);
-          arrayOfRandomPictures.push(picturesArray[currentIndex]);
-        }
+      for (var i = 0; i < RANDOM_ARRAY_LENGTH; i++) {
+        var index = window.utils.getRandomInt(0, picturesArrayCopy.length - 1);
+        arrayOfRandomPictures.push(picturesArrayCopy.splice(index, 1)[0]);
       }
 
       window.updatePictures(arrayOfRandomPictures);
