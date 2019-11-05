@@ -28,22 +28,11 @@
 
   //  удаление уже отрисованных фотографий
   var removePictures = function () {
-    var currentPicturesNodes = document.querySelectorAll('.picture');
+    var currentPicturesElements = document.querySelectorAll('.picture');
 
-    currentPicturesNodes.forEach(function (picture) {
+    currentPicturesElements.forEach(function (picture) {
       picture.remove();
     });
-  };
-
-  //  функция для клонирования исходного массива данных с сервера
-  var cloneArray = function (array) {
-    var newArray = [];
-
-    array.forEach(function (element) {
-      newArray.push(element);
-    });
-
-    return newArray;
   };
 
   var renderPictures = function (pictureObject) {
@@ -97,21 +86,21 @@
 
   //  обработчик успешной загрузки фотографий с сервера
   var onLoadSuccess = function (picturesArray) {
-    initialArray = cloneArray(picturesArray);
+    initialArray = window.utils.cloneArray(picturesArray);
 
     window.updatePictures(picturesArray);
 
     imgFiltersElement.classList.remove('img-filters--inactive');
 
-    popularButtonElement.addEventListener('click', window.debounce(function () {
+    popularButtonElement.addEventListener('click', window.utils.debounce(function () {
       window.filters.onPopularButtonClick(initialArray, popularButtonElement);
     }, DEBOUNCE_INTERVAL));
 
-    randomButtonElement.addEventListener('click', window.debounce(function () {
+    randomButtonElement.addEventListener('click', window.utils.debounce(function () {
       window.filters.onRandomButtonClick(picturesArray, randomButtonElement);
     }, DEBOUNCE_INTERVAL));
 
-    discussedButtonElement.addEventListener('click', window.debounce(function () {
+    discussedButtonElement.addEventListener('click', window.utils.debounce(function () {
       window.filters.onDiscussedButtonClick(picturesArray, discussedButtonElement);
     }, DEBOUNCE_INTERVAL));
   };
