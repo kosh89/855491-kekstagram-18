@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 500;
   var pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
   var picturesListElement = document.querySelector('.pictures');
   var bigPictureImgElement = document.querySelector('.big-picture__img img');
@@ -10,6 +11,29 @@
   var socialCommentsElement = document.querySelector('.social__comments');
   var socialCaptionElement = document.querySelector('.social__caption');
   var commentsLoaderElement = document.querySelector('.comments-loader');
+
+  var imgFiltersElement = document.querySelector('.img-filters');
+  var popularButtonElement = imgFiltersElement.querySelector('#filter-popular');
+  var randomButtonElement = imgFiltersElement.querySelector('#filter-random');
+  var discussedButtonElement = imgFiltersElement.querySelector('#filter-discussed');
+
+  var initialArray = [];
+
+  window.updatePictures = function (picturesArray) {
+    removePictures();
+    var fragment = document.createDocumentFragment();
+    createPictureNodes(fragment, picturesArray);
+    picturesListElement.appendChild(fragment);
+  };
+
+  //  удаление уже отрисованных фотографий
+  var removePictures = function () {
+    var currentPicturesElements = document.querySelectorAll('.picture');
+
+    currentPicturesElements.forEach(function (picture) {
+      picture.remove();
+    });
+  };
 
   var renderPictures = function (pictureObject) {
     var pictureItem = pictureTemplateElement.cloneNode(true);
@@ -62,11 +86,23 @@
 
   //  обработчик успешной загрузки фотографий с сервера
   var onLoadSuccess = function (picturesArray) {
-    var fragment = document.createDocumentFragment();
+    initialArray = window.utils.cloneArray(picturesArray);
 
-    createPictureNodes(fragment, picturesArray);
+    window.updatePictures(picturesArray);
 
-    picturesListElement.appendChild(fragment);
+    imgFiltersElement.classList.remove('img-filters--inactive');
+
+    popularButtonElement.addEventListener('click', window.utils.debounce(function () {
+      window.filters.onPopularButtonClick(initialArray, popularButtonElement);
+    }, DEBOUNCE_INTERVAL));
+
+    randomButtonElement.addEventListener('click', window.utils.debounce(function () {
+      window.filters.onRandomButtonClick(picturesArray, randomButtonElement);
+    }, DEBOUNCE_INTERVAL));
+
+    discussedButtonElement.addEventListener('click', window.utils.debounce(function () {
+      window.filters.onDiscussedButtonClick(picturesArray, discussedButtonElement);
+    }, DEBOUNCE_INTERVAL));
   };
 
   window.backend.load(onLoadSuccess, window.backend.onServerRequestError);
