@@ -2,6 +2,8 @@
 
 (function () {
   var DEBOUNCE_INTERVAL = 500;
+  var COMMENTS_PER_PAGE = 5;
+
   var pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
   var picturesListElement = document.querySelector('.pictures');
   var bigPictureImgElement = document.querySelector('.big-picture__img img');
@@ -69,17 +71,24 @@
       var socialCommentsElements = socialCommentsElement.querySelectorAll('.social__comment');
 
       //  сбрасываем счётчик показанных комментариев
-      commentsCountBlockElement.innerHTML = '5 из <span class="comments-count">' + socialCommentsElements.length + '</span> комментариев</div>';
+      var commentsQuantity = 0;
+
+      if (socialCommentsElements.length > COMMENTS_PER_PAGE) {
+        commentsQuantity = COMMENTS_PER_PAGE;
+      } else {
+        commentsQuantity = socialCommentsElements.length;
+      }
+
+      commentsCountBlockElement.innerHTML = commentsQuantity + ' из <span class="comments-count">' + socialCommentsElements.length + '</span> комментариев</div>';
 
       //  если комментариев больше пяти, то остальные скрываем
-      if (socialCommentsElements.length > 5) {
-        for (var i = 5; i < socialCommentsElements.length; i++) {
+      if (socialCommentsElements.length > COMMENTS_PER_PAGE) {
+        for (var i = COMMENTS_PER_PAGE; i < socialCommentsElements.length; i++) {
           socialCommentsElements[i].classList.add('visually-hidden');
         }
       }
 
       var showNextFiveComments = function () {
-        var NEXT_COMMENTS = 5;
         var showedComments = 5;
 
         return function () {
@@ -87,7 +96,7 @@
             return;
           }
 
-          var endOfCommentsArray = showedComments + NEXT_COMMENTS;
+          var endOfCommentsArray = showedComments + COMMENTS_PER_PAGE;
 
           if (socialCommentsElements.length < endOfCommentsArray) {
             endOfCommentsArray = socialCommentsElements.length;
@@ -99,7 +108,7 @@
 
           commentsCountBlockElement.innerHTML = endOfCommentsArray + ' из <span class="comments-count">' + socialCommentsElements.length + '</span> комментариев</div>';
 
-          showedComments += 5;
+          showedComments += COMMENTS_PER_PAGE;
         };
       };
 
