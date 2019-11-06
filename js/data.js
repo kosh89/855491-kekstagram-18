@@ -2,6 +2,8 @@
 
 (function () {
   var DEBOUNCE_INTERVAL = 500;
+  var COMMENTS_PER_PAGE = 5;
+
   var pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
   var picturesListElement = document.querySelector('.pictures');
   var bigPictureImgElement = document.querySelector('.big-picture__img img');
@@ -66,8 +68,53 @@
       //  заполняем своими комментариями
       socialCommentsElement.innerHTML = getCommentsHTML(pictureObject.comments);
 
-      commentsCountBlockElement.classList.add('visually-hidden');
-      commentsLoaderElement.classList.add('visually-hidden');
+      var socialCommentsElements = socialCommentsElement.querySelectorAll('.social__comment');
+
+      //  сбрасываем счётчик показанных комментариев
+      var commentsQuantity = 0;
+
+      if (socialCommentsElements.length > COMMENTS_PER_PAGE) {
+        commentsQuantity = COMMENTS_PER_PAGE;
+      } else {
+        commentsQuantity = socialCommentsElements.length;
+      }
+
+      commentsCountBlockElement.innerHTML = commentsQuantity + ' из <span class="comments-count">' + socialCommentsElements.length + '</span> комментариев</div>';
+
+      //  если комментариев больше пяти, то остальные скрываем
+      if (socialCommentsElements.length > COMMENTS_PER_PAGE) {
+        for (var i = COMMENTS_PER_PAGE; i < socialCommentsElements.length; i++) {
+          socialCommentsElements[i].classList.add('visually-hidden');
+        }
+      }
+
+      var showNextFiveComments = function () {
+        var showedComments = 5;
+
+        return function () {
+          if (showedComments > socialCommentsElements.length) {
+            return;
+          }
+
+          var endOfCommentsArray = showedComments + COMMENTS_PER_PAGE;
+
+          if (socialCommentsElements.length < endOfCommentsArray) {
+            endOfCommentsArray = socialCommentsElements.length;
+          }
+
+          for (var k = showedComments; k < endOfCommentsArray; k++) {
+            socialCommentsElements[k].classList.remove('visually-hidden');
+          }
+
+          commentsCountBlockElement.innerHTML = endOfCommentsArray + ' из <span class="comments-count">' + socialCommentsElements.length + '</span> комментариев</div>';
+
+          showedComments += COMMENTS_PER_PAGE;
+        };
+      };
+
+      var onCommentsLoaderElementClick = showNextFiveComments();
+
+      commentsLoaderElement.addEventListener('click', onCommentsLoaderElementClick);
 
       window.showBigPicture();
     };
