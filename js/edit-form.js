@@ -81,6 +81,7 @@
   //  очищаем value загруженного файла
   var clearUploadFile = function () {
     uploadFileElement.value = '';
+    previewImageElement.src = DEFAULT_PREVIEW_PATH;
   };
 
   //  загрузка новой фотографии
@@ -101,8 +102,6 @@
         });
 
         reader.readAsDataURL(file);
-      } else {
-        previewImageElement.src = DEFAULT_PREVIEW_PATH;
       }
     }
   });
