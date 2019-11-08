@@ -6,7 +6,8 @@
   var PIN_POSITION_COEFFICIENT = 4.53;
   var CSS_FILTER_COEFFICIENT = 33.3;
   var SCALE_STEP = 25;
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
+  var DEFAULT_PREVIEW_PATH = 'img/upload-default-image.jpg';
 
   //  Загрузка изображения, показ окна редактирования
   var uploadFileElement = document.querySelector('#upload-file');
@@ -100,6 +101,8 @@
         });
 
         reader.readAsDataURL(file);
+      } else {
+        previewImageElement.src = DEFAULT_PREVIEW_PATH;
       }
     }
   });
