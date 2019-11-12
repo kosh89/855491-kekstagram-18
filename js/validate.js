@@ -1,55 +1,40 @@
 'use strict';
 
 (function () {
+  var MAX_HASHTAGS_COUNT = 5;
+  var MAX_HASHTAG_LENGTH = 20;
+
   //  валидация хэштегов
   var hashtagFieldElement = document.querySelector('.text__hashtags');
 
-  //  удаление пустых элементов массива
-  var deleteEmptyElements = function (array) {
-    for (var i = 0; i < array.length; i++) {
-      if (array[i] === '') {
-        array.splice(i, 1);
-        i--;
-      }
-    }
-  };
-
   //  хэш-тег начинается с символа # (решётка)
   var isHashSymbolFirst = function (element) {
-    if (element[0] === '#') {
-      return true;
-    }
-
-    return false;
+    return element[0] === '#';
   };
 
   //  хеш-тег не может состоять только из одной решётки;
   var isSingleHashSymbol = function (element) {
-    if (element === '#') {
-      return true;
-    }
-
-    return false;
+    return element === '#';
   };
 
   //  один и тот же хэш-тег не может быть использован дважды
   var isSimilarHashtags = function (array) {
     var tempArray = [];
     for (var i = 0; i < array.length; i++) {
-      var arrayImem = array[i].toLowerCase();
-      if (tempArray.indexOf(arrayImem) !== -1) {
+      var arrayItem = array[i].toLowerCase();
+      if (tempArray.indexOf(arrayItem) !== -1) {
         return true;
       }
 
-      tempArray.push(arrayImem);
+      tempArray.push(arrayItem);
     }
 
     return false;
   };
 
   //  нельзя указать больше пяти хэш-тегов
-  var isMoreThanFive = function (array) {
-    if (array.length > 5) {
+  var isMoreThanMaxCount = function (array) {
+    if (array.length > MAX_HASHTAGS_COUNT) {
       return true;
     }
 
@@ -57,8 +42,8 @@
   };
 
   //  максимальная длина одного хэш-тега 20 символов, включая решётку
-  var isMoreThanTwentySymbols = function (element) {
-    if (element.length > 20) {
+  var isMoreThanMaxLength = function (element) {
+    if (element.length > MAX_HASHTAG_LENGTH) {
       return true;
     }
 
@@ -72,23 +57,27 @@
   });
 
   hashtagFieldElement.addEventListener('input', function () {
-    var arrayOfHashtags = hashtagFieldElement.value.split(' ');
-    deleteEmptyElements(arrayOfHashtags);
+    var hashtags = hashtagFieldElement.value.split(' ');
 
-    for (var i = 0; i < arrayOfHashtags.length; i++) {
-      if (!isHashSymbolFirst(arrayOfHashtags[i])) {
+    //  удаляем пустые элементы
+    hashtags = hashtags.filter(function (item) {
+      return !!item;
+    });
+
+    for (var i = 0; i < hashtags.length; i++) {
+      if (!isHashSymbolFirst(hashtags[i])) {
         hashtagFieldElement.setCustomValidity('Хэштег должен начинаться с #');
         return;
-      } else if (isSingleHashSymbol(arrayOfHashtags[i])) {
+      } else if (isSingleHashSymbol(hashtags[i])) {
         hashtagFieldElement.setCustomValidity('Хэштег не может состоять из одного симовла #');
         return;
-      } else if (isSimilarHashtags(arrayOfHashtags)) {
+      } else if (isSimilarHashtags(hashtags)) {
         hashtagFieldElement.setCustomValidity('Хэштеги не должны повторяться');
         return;
-      } else if (isMoreThanFive(arrayOfHashtags)) {
+      } else if (isMoreThanMaxCount(hashtags)) {
         hashtagFieldElement.setCustomValidity('Должно быть не более 5 хэштегов');
         return;
-      } else if (isMoreThanTwentySymbols(arrayOfHashtags[i])) {
+      } else if (isMoreThanMaxLength(hashtags[i])) {
         hashtagFieldElement.setCustomValidity('Максимальная длина хэштега 20 символов');
         return;
       } else {

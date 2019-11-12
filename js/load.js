@@ -4,14 +4,15 @@
   var API_URL = 'https://js.dump.academy/kekstagram/';
   var GET_METHOD = 'GET';
   var POST_METHOD = 'POST';
-
+  var HTTP_REQUEST_OK = 200;
+  var WAITING_TIMEOUT = 5000;
 
   var request = function (url, method, data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === HTTP_REQUEST_OK) {
         onSuccess(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -19,18 +20,18 @@
     });
 
     xhr.addEventListener('error', function () {
-      if (xhr.statusText !== 200) {
+      if (xhr.statusText !== HTTP_REQUEST_OK) {
         onError('Произошла ошибка соединения');
       }
     });
 
     xhr.addEventListener('timeout', function () {
-      if (xhr.statusText !== 200) {
+      if (xhr.statusText !== HTTP_REQUEST_OK) {
         onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       }
     });
 
-    xhr.timeout = 5000;
+    xhr.timeout = WAITING_TIMEOUT;
 
     xhr.open(method, url);
     xhr.send(data);

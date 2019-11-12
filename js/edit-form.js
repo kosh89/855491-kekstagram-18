@@ -5,6 +5,7 @@
   var PIN_RIGHT_EXTREME_POSITION = 453;
   var PIN_POSITION_COEFFICIENT = 4.53;
   var CSS_FILTER_COEFFICIENT = 33.3;
+  var SCALE_DEFAULT_VALUE = 100;
   var SCALE_STEP = 25;
   var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
   var DEFAULT_PREVIEW_PATH = 'img/upload-default-image.jpg';
@@ -14,12 +15,12 @@
   var editFormElement = document.querySelector('.img-upload__overlay');
   var editFormCloseButtonElement = editFormElement.querySelector('#upload-cancel');
   var imgUploadFormElement = document.querySelector('.img-upload__form');
-  var succesTemplateElement = document.querySelector('#success').content.querySelector('.success');
+  var successTemplateElement = document.querySelector('#success').content.querySelector('.success');
 
   var effectLevelSliderElement = document.querySelector('.effect-level');
   var effectLevelValueElement = document.querySelector('.effect-level__value');
   var effectLevelPinElement = document.querySelector('.effect-level__pin');
-  var effectLelvelDepthElement = document.querySelector('.effect-level__depth');
+  var effectLevelDepthElement = document.querySelector('.effect-level__depth');
   var effectsElement = document.querySelector('.effects');
   var currentEffectElement = document.querySelector('#effect-none');
 
@@ -47,15 +48,15 @@
 
   //  сбрасываем масштаб
   var resetScale = function () {
-    scaleControlValueElement.value = '100%';
+    scaleControlValueElement.value = SCALE_DEFAULT_VALUE + '%';
     setScaleToPreviewImage();
   };
 
   //  сбрасываем уровень интенсивности эффекта
   var resetEffectLevel = function () {
-    effectLevelValueElement.value = 100;
-    effectLevelPinElement.style.left = '100%';
-    effectLelvelDepthElement.style.width = '100%';
+    effectLevelValueElement.value = SCALE_DEFAULT_VALUE + '%';
+    effectLevelPinElement.style.left = SCALE_DEFAULT_VALUE + '%';
+    effectLevelDepthElement.style.width = SCALE_DEFAULT_VALUE + '%';
   };
 
   //  сбросить текущий эффект
@@ -133,14 +134,14 @@
 
   //  увеличить масштаб
   var scaleUp = function () {
-    if (parseInt(scaleControlValueElement.value, 10) < 100) {
+    if (parseInt(scaleControlValueElement.value, 10) < SCALE_DEFAULT_VALUE) {
       scaleControlValueElement.value = parseInt(scaleControlValueElement.value, 10) + SCALE_STEP + '%';
     }
   };
 
   //  уменьшить масштаб
   var scaleDown = function () {
-    if (parseInt(scaleControlValueElement.value, 10) > 25) {
+    if (parseInt(scaleControlValueElement.value, 10) > SCALE_STEP) {
       scaleControlValueElement.value = parseInt(scaleControlValueElement.value, 10) - SCALE_STEP + '%';
     }
   };
@@ -161,8 +162,8 @@
   });
 
   //  меняем класс картинки в зависимости от выбранного эффекта
-  var changeClassToPreviewImage = function (evt) {
-    previewImageElement.className = 'effects__preview--' + evt.target.value;
+  var changeClassToPreviewImage = function (value) {
+    previewImageElement.className = 'effects__preview--' + value;
   };
 
   //  в зависимости от выбранного эффекта определяем используемый css-фильтр
@@ -239,12 +240,12 @@
     resetCurrentEffect();
     currentEffectElement = document.querySelector('#effect-' + evt.target.value);
     toggleEffectLevelSlider(evt);
-    changeClassToPreviewImage(evt);
+    changeClassToPreviewImage(evt.target.value);
     resetEffectLevel();
   });
 
   //  работа с окном успешной отправки данных на сервер
-  var successItem = succesTemplateElement.cloneNode(true);
+  var successItem = successTemplateElement.cloneNode(true);
   successItem.style.display = 'none';
   document.querySelector('main').insertAdjacentElement('afterbegin', successItem);
 

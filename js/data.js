@@ -19,12 +19,12 @@
   var randomButtonElement = imgFiltersElement.querySelector('#filter-random');
   var discussedButtonElement = imgFiltersElement.querySelector('#filter-discussed');
 
-  var initialArray = [];
+  var backupOfPictures = [];
 
-  window.updatePictures = function (picturesArray) {
+  window.updatePictures = function (pictures) {
     removePictures();
     var fragment = document.createDocumentFragment();
-    createPictureNodes(fragment, picturesArray);
+    createPictureNodes(fragment, pictures);
     picturesListElement.appendChild(fragment);
   };
 
@@ -48,15 +48,15 @@
     var getCommentsHTML = function (comments) {
       var commentsString = '';
 
-      for (var i = 0; i < comments.length; i++) {
-        commentsString += '<li class="social__comment"><img class="social__picture" src=' + comments[i].avatar + ' alt=' + comments[i].name + ' width="35" height="35"> <p class="social__text">' + comments[i].message + '</p></li>';
-      }
+      comments.forEach(function (item) {
+        commentsString += '<li class="social__comment"><img class="social__picture" src=' + item.avatar + ' alt=' + item.name + ' width="35" height="35"> <p class="social__text">' + item.message + '</p></li>';
+      });
 
       return commentsString;
     };
 
-    //  заполняем картинку данными из объекта картинки
-    var fillPictureItemByData = function () {
+    //  заполняем картинку данными из объекта картинки 58
+    var onPictureItemClick = function () {
       bigPictureImgElement.src = pictureObject.url;
       likesCountElement.textContent = pictureObject.likes;
       commentsCountElement.textContent = pictureObject.comments.length;
@@ -73,11 +73,7 @@
       //  сбрасываем счётчик показанных комментариев
       var commentsQuantity = 0;
 
-      if (socialCommentsElements.length > COMMENTS_PER_PAGE) {
-        commentsQuantity = COMMENTS_PER_PAGE;
-      } else {
-        commentsQuantity = socialCommentsElements.length;
-      }
+      commentsQuantity = socialCommentsElements.length > COMMENTS_PER_PAGE ? COMMENTS_PER_PAGE : socialCommentsElements.length;
 
       commentsCountBlockElement.innerHTML = commentsQuantity + ' из <span class="comments-count">' + socialCommentsElements.length + '</span> комментариев</div>';
 
@@ -89,7 +85,7 @@
       }
 
       var showNextFiveComments = function () {
-        var showedComments = 5;
+        var showedComments = COMMENTS_PER_PAGE;
 
         return function () {
           if (showedComments > socialCommentsElements.length) {
@@ -120,35 +116,35 @@
     };
 
     //  при клике на картинку показываем её на весь экран и заполняем данными из объекта картинки
-    pictureItem.addEventListener('click', fillPictureItemByData);
+    pictureItem.addEventListener('click', onPictureItemClick);
 
     return pictureItem;
   };
 
-  var createPictureNodes = function (block, array) {
-    for (var i = 0; i < array.length; i++) {
-      block.appendChild(renderPictures(array[i]));
+  var createPictureNodes = function (block, pictures) {
+    for (var i = 0; i < pictures.length; i++) {
+      block.appendChild(renderPictures(pictures[i]));
     }
   };
 
   //  обработчик успешной загрузки фотографий с сервера
-  var onLoadSuccess = function (picturesArray) {
-    initialArray = window.utils.cloneArray(picturesArray);
+  var onLoadSuccess = function (pictures) {
+    backupOfPictures = window.utils.cloneArray(pictures);
 
-    window.updatePictures(picturesArray);
+    window.updatePictures(pictures);
 
     imgFiltersElement.classList.remove('img-filters--inactive');
 
     popularButtonElement.addEventListener('click', window.utils.debounce(function () {
-      window.filters.onPopularButtonClick(initialArray, popularButtonElement);
+      window.filters.onPopularButtonClick(backupOfPictures, popularButtonElement);
     }, DEBOUNCE_INTERVAL));
 
     randomButtonElement.addEventListener('click', window.utils.debounce(function () {
-      window.filters.onRandomButtonClick(picturesArray, randomButtonElement);
+      window.filters.onRandomButtonClick(pictures, randomButtonElement);
     }, DEBOUNCE_INTERVAL));
 
     discussedButtonElement.addEventListener('click', window.utils.debounce(function () {
-      window.filters.onDiscussedButtonClick(picturesArray, discussedButtonElement);
+      window.filters.onDiscussedButtonClick(pictures, discussedButtonElement);
     }, DEBOUNCE_INTERVAL));
   };
 

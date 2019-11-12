@@ -18,20 +18,19 @@
 
   var showRandomPictures = function (picturesArray, button) {
     var picturesArrayCopy = window.utils.cloneArray(picturesArray);
-    var arrayOfRandomPictures = [];
+    var randomPictures = [];
 
     for (var i = 0; i < RANDOM_ARRAY_LENGTH; i++) {
       var index = window.utils.getRandomInt(0, picturesArrayCopy.length - 1);
-      arrayOfRandomPictures.push(picturesArrayCopy.splice(index, 1)[0]);
+      randomPictures.push(picturesArrayCopy.splice(index, 1)[0]);
     }
 
-    window.updatePictures(arrayOfRandomPictures);
+    window.updatePictures(randomPictures);
     currentButtonBacklight(button);
   };
 
   var showDiscussedPictures = function (picturesArray, button) {
-    var arrayOfDiscussedPictures = picturesArray;
-    arrayOfDiscussedPictures.sort(function (prevPic, nextPic) {
+    var arrayOfDiscussedPictures = picturesArray.sort(function (prevPic, nextPic) {
       return nextPic.comments.length - prevPic.comments.length;
     });
 

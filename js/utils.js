@@ -9,8 +9,7 @@
     },
 
     cloneArray: function (array) {
-      var newArray = JSON.parse(JSON.stringify(array));
-      return newArray;
+      return JSON.parse(JSON.stringify(array));
     },
 
     debounce: function (cb, time) {
