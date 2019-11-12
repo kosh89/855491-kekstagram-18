@@ -103,6 +103,7 @@
         });
 
         reader.readAsDataURL(file);
+        onEditFormShow();
       }
     }
   });
@@ -123,7 +124,7 @@
     clearUploadFile();
   };
 
-  uploadFileElement.addEventListener('change', onEditFormShow);
+  /* uploadFileElement.addEventListener('change', onEditFormShow); */
 
   editFormCloseButtonElement.addEventListener('click', onEditFormClose);
 
