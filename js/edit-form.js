@@ -124,8 +124,6 @@
     clearUploadFile();
   };
 
-  /* uploadFileElement.addEventListener('change', onEditFormShow); */
-
   editFormCloseButtonElement.addEventListener('click', onEditFormClose);
 
   //  получить интенсивность в зависимости от положения ползунка
