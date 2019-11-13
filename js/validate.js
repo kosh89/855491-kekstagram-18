@@ -56,18 +56,20 @@
       return !!item;
     });
 
+    if (isSimilarHashtags(hashtags)) {
+      hashtagFieldElement.setCustomValidity('Хэштеги не должны повторяться');
+      return;
+    } else if (isMoreThanMaxCount(hashtags)) {
+      hashtagFieldElement.setCustomValidity('Должно быть не более 5 хэштегов');
+      return;
+    }
+
     for (var i = 0; i < hashtags.length; i++) {
       if (!isHashSymbolFirst(hashtags[i])) {
         hashtagFieldElement.setCustomValidity('Хэштег должен начинаться с #');
         return;
       } else if (isSingleHashSymbol(hashtags[i])) {
         hashtagFieldElement.setCustomValidity('Хэштег не может состоять из одного симовла #');
-        return;
-      } else if (isSimilarHashtags(hashtags)) {
-        hashtagFieldElement.setCustomValidity('Хэштеги не должны повторяться');
-        return;
-      } else if (isMoreThanMaxCount(hashtags)) {
-        hashtagFieldElement.setCustomValidity('Должно быть не более 5 хэштегов');
         return;
       } else if (isMoreThanMaxLength(hashtags[i])) {
         hashtagFieldElement.setCustomValidity('Максимальная длина хэштега 20 символов');
