@@ -122,9 +122,9 @@
   };
 
   var createPictureNodes = function (block, pictures) {
-    for (var i = 0; i < pictures.length; i++) {
-      block.appendChild(renderPictures(pictures[i]));
-    }
+    pictures.forEach(function (item) {
+      block.appendChild(renderPictures(item));
+    });
   };
 
   //  обработчик успешной загрузки фотографий с сервера
