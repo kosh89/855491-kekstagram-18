@@ -34,20 +34,12 @@
 
   //  нельзя указать больше пяти хэш-тегов
   var isMoreThanMaxCount = function (array) {
-    if (array.length > MAX_HASHTAGS_COUNT) {
-      return true;
-    }
-
-    return false;
+    return array.length > MAX_HASHTAGS_COUNT;
   };
 
   //  максимальная длина одного хэш-тега 20 символов, включая решётку
   var isMoreThanMaxLength = function (element) {
-    if (element.length > MAX_HASHTAG_LENGTH) {
-      return true;
-    }
-
-    return false;
+    return element.length > MAX_HASHTAG_LENGTH;
   };
 
   hashtagFieldElement.addEventListener('invalid', function () {
