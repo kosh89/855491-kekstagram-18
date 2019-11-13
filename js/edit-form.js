@@ -2,13 +2,12 @@
 
 (function () {
   var PIN_LEFT_EXTREME_POSITION = 0;
-  var PIN_RIGHT_EXTREME_POSITION = 453;
-  var PIN_POSITION_COEFFICIENT = 4.53;
-  var CSS_BLUR_COEFFICIENT = 33.3;
-  var CSS_BRIGHTNESS_COEFFICIENT = 50;
-  var CSS_BRIGHTNESS_CORRECTION = 1;
   var SCALE_DEFAULT_VALUE = 100;
+  var PERCENTAGE = 100;
   var EFFECT_DEFAULT_INTENSITY = 100;
+  var BRIGHTNESS_MIN_VALUE = 1;
+  var BRIGHTNESS_MAX_VALUE = 3;
+  var BLUR_COEFFICIENT = 3;
   var SCALE_STEP = 25;
   var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
   var DEFAULT_PREVIEW_PATH = 'img/upload-default-image.jpg';
@@ -24,6 +23,7 @@
   var effectLevelValueElement = document.querySelector('.effect-level__value');
   var effectLevelPinElement = document.querySelector('.effect-level__pin');
   var effectLevelDepthElement = document.querySelector('.effect-level__depth');
+  var effectLevelLineElement = document.querySelector('.effect-level__line');
   var effectsElement = document.querySelector('.effects');
   var currentEffectElement = document.querySelector('#effect-none');
 
@@ -70,7 +70,9 @@
 
   //  сбрасываем класс превью-картинке
   var resetClassToPreviewImage = function () {
-    previewImageElement.className = '';
+    if (previewImageClass) {
+      previewImageElement.classList.remove(previewImageClass);
+    }
   };
 
   //  скрываем/показываем слайдер интенсивности эффекта в зависимости от выбранного эффекта
@@ -131,7 +133,7 @@
 
   //  получить интенсивность в зависимости от положения ползунка
   var getEffectIntensity = function () {
-    return parseInt(effectLevelPinElement.style.left, 10) / PIN_POSITION_COEFFICIENT;
+    return effectLevelPinElement.offsetLeft / effectLevelLineElement.clientWidth;
   };
 
   //  увеличить масштаб
@@ -164,8 +166,11 @@
   });
 
   //  меняем класс картинки в зависимости от выбранного эффекта
+  var previewImageClass = '';
+
   var changeClassToPreviewImage = function (value) {
-    previewImageElement.className = 'effects__preview--' + value;
+    previewImageClass = 'effects__preview--' + value;
+    previewImageElement.className = previewImageClass;
   };
 
   //  в зависимости от выбранного эффекта определяем используемый css-фильтр
@@ -174,19 +179,19 @@
 
     switch (currentEffectElement.value) {
       case ('chrome'):
-        currentCss = 'grayscale(' + getEffectIntensity() / 100 + ')';
+        currentCss = 'grayscale(' + getEffectIntensity() + ')';
         break;
       case ('sepia'):
-        currentCss = 'sepia(' + getEffectIntensity() / 100 + ')';
+        currentCss = 'sepia(' + getEffectIntensity() + ')';
         break;
       case ('marvin'):
-        currentCss = 'invert(' + getEffectIntensity() + '%)';
+        currentCss = 'invert(' + getEffectIntensity() * PERCENTAGE + '%)';
         break;
       case ('phobos'):
-        currentCss = 'blur(' + getEffectIntensity() / CSS_BLUR_COEFFICIENT + 'px)';
+        currentCss = 'blur(' + getEffectIntensity() * BLUR_COEFFICIENT + 'px)';
         break;
       case ('heat'):
-        currentCss = 'brightness(' + (CSS_BRIGHTNESS_CORRECTION + (getEffectIntensity() / CSS_BRIGHTNESS_COEFFICIENT)) + ')';
+        currentCss = 'brightness(' + (BRIGHTNESS_MIN_VALUE + getEffectIntensity() * (BRIGHTNESS_MAX_VALUE - BRIGHTNESS_MIN_VALUE)) + ')';
         break;
       default:
         currentCss = '';
@@ -212,7 +217,7 @@
 
     var pinNewPosition = effectLevelPinElement.offsetLeft - shiftX;
 
-    if (pinNewPosition < PIN_LEFT_EXTREME_POSITION || pinNewPosition > PIN_RIGHT_EXTREME_POSITION) {
+    if (pinNewPosition < PIN_LEFT_EXTREME_POSITION || pinNewPosition > effectLevelLineElement.clientWidth) {
       return;
     } else {
       effectLevelPinElement.style.left = pinNewPosition + 'px';
@@ -224,7 +229,7 @@
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
-    effectLevelValueElement.value = Math.round(getEffectIntensity());
+    effectLevelValueElement.value = Math.round(getEffectIntensity() * PERCENTAGE);
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mousemove', onMouseUp);
@@ -281,6 +286,6 @@
   imgUploadFormElement.addEventListener('submit', function (evt) {
     evt.preventDefault();
 
-    window.load.save(new FormData(imgUploadFormElement), onUploadSuccess, window.load.onServerRequestError);
+    window.backend.save(new FormData(imgUploadFormElement), onUploadSuccess, window.backend.onServerRequestError);
   });
 })();
