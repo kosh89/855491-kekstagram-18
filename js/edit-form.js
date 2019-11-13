@@ -8,6 +8,7 @@
   var CSS_BRIGHTNESS_COEFFICIENT = 50;
   var CSS_BRIGHTNESS_CORRECTION = 1;
   var SCALE_DEFAULT_VALUE = 100;
+  var EFFECT_DEFAULT_INTENSITY = 100;
   var SCALE_STEP = 25;
   var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
   var DEFAULT_PREVIEW_PATH = 'img/upload-default-image.jpg';
@@ -56,9 +57,9 @@
 
   //  сбрасываем уровень интенсивности эффекта
   var resetEffectLevel = function () {
-    effectLevelValueElement.value = SCALE_DEFAULT_VALUE + '%';
-    effectLevelPinElement.style.left = SCALE_DEFAULT_VALUE + '%';
-    effectLevelDepthElement.style.width = SCALE_DEFAULT_VALUE + '%';
+    effectLevelValueElement.value = EFFECT_DEFAULT_INTENSITY;
+    effectLevelPinElement.style.left = EFFECT_DEFAULT_INTENSITY + '%';
+    effectLevelDepthElement.style.width = EFFECT_DEFAULT_INTENSITY + '%';
   };
 
   //  сбросить текущий эффект
@@ -222,6 +223,8 @@
 
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
+
+    effectLevelValueElement.value = Math.round(getEffectIntensity());
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mousemove', onMouseUp);
