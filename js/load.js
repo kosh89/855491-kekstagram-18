@@ -62,7 +62,7 @@
 
   errorItem.addEventListener('click', onErrorMessageClose);
 
-  window.backend = {
+  window.load = {
     load: function (onSuccess, onError) {
       request(API_URL + 'data', GET_METHOD, null, onSuccess, onError);
     },

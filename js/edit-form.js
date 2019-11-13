@@ -278,6 +278,6 @@
   imgUploadFormElement.addEventListener('submit', function (evt) {
     evt.preventDefault();
 
-    window.backend.save(new FormData(imgUploadFormElement), onUploadSuccess, window.backend.onServerRequestError);
+    window.load.save(new FormData(imgUploadFormElement), onUploadSuccess, window.load.onServerRequestError);
   });
 })();

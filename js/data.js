@@ -148,5 +148,5 @@
     }, DEBOUNCE_INTERVAL));
   };
 
-  window.backend.load(onLoadSuccess, window.backend.onServerRequestError);
+  window.load.load(onLoadSuccess, window.load.onServerRequestError);
 })();
