@@ -4,7 +4,9 @@
   var PIN_LEFT_EXTREME_POSITION = 0;
   var PIN_RIGHT_EXTREME_POSITION = 453;
   var PIN_POSITION_COEFFICIENT = 4.53;
-  var CSS_FILTER_COEFFICIENT = 33.3;
+  var CSS_BLUR_COEFFICIENT = 33.3;
+  var CSS_BRIGHTNESS_COEFFICIENT = 50;
+  var CSS_BRIGHTNESS_CORRECTION = 1;
   var SCALE_DEFAULT_VALUE = 100;
   var SCALE_STEP = 25;
   var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
@@ -180,10 +182,10 @@
         currentCss = 'invert(' + getEffectIntensity() + '%)';
         break;
       case ('phobos'):
-        currentCss = 'blur(' + getEffectIntensity() / CSS_FILTER_COEFFICIENT + 'px)';
+        currentCss = 'blur(' + getEffectIntensity() / CSS_BLUR_COEFFICIENT + 'px)';
         break;
       case ('heat'):
-        currentCss = 'brightness(' + getEffectIntensity() / CSS_FILTER_COEFFICIENT + ')';
+        currentCss = 'brightness(' + (CSS_BRIGHTNESS_CORRECTION + (getEffectIntensity() / CSS_BRIGHTNESS_COEFFICIENT)) + ')';
         break;
       default:
         currentCss = '';
