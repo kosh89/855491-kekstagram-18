@@ -55,7 +55,7 @@
       return commentsString;
     };
 
-    //  заполняем картинку данными из объекта картинки 58
+    //  заполняем картинку данными из объекта картинки
     var onPictureItemClick = function () {
       bigPictureImgElement.src = pictureObject.url;
       likesCountElement.textContent = pictureObject.likes;
@@ -148,5 +148,5 @@
     }, DEBOUNCE_INTERVAL));
   };
 
-  window.load.load(onLoadSuccess, window.load.onServerRequestError);
+  window.backend.load(onLoadSuccess, window.backend.onServerRequestError);
 })();
