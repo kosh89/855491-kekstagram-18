@@ -37,6 +37,24 @@
     });
   };
 
+  //  экранирование спецсимволов
+  var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    '\'': '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  };
+
+  var escapeHtml = function (string) {
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+      return entityMap[s];
+    });
+  };
+
   var renderPictures = function (pictureObject) {
     var pictureItem = pictureTemplateElement.cloneNode(true);
 
@@ -49,7 +67,7 @@
       var commentsString = '';
 
       comments.forEach(function (item) {
-        commentsString += '<li class="social__comment"><img class="social__picture" src=' + item.avatar + ' alt=' + item.name + ' width="35" height="35"> <p class="social__text">' + item.message + '</p></li>';
+        commentsString += '<li class="social__comment"><img class="social__picture" src=' + escapeHtml(item.avatar) + ' alt=' + escapeHtml(item.name) + ' width="35" height="35"> <p class="social__text">' + escapeHtml(item.message) + '</p></li>';
       });
 
       return commentsString;
